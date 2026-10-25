@@ -1,0 +1,1882 @@
+[
+  {
+    "word": "king",
+    "category": "royalty",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": 0.65,
+      "royalty": 0.95,
+      "ferocity": 0.2,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2149,
+      0.3492,
+      0.5104,
+      0.5372,
+      0.0537,
+      0.1074,
+      0.0,
+      0.0,
+      0.0,
+      0.0537,
+      -0.1074,
+      -0.1074,
+      0.0,
+      -0.1074,
+      0.2149,
+      0.4298
+    ],
+    "pca_2d": [
+      0.159,
+      0.676
+    ],
+    "pca_3d": [
+      0.159,
+      0.676,
+      -0.187
+    ],
+    "description": "Male monarch, sovereign ruler of an independent state."
+  },
+  {
+    "word": "queen",
+    "category": "royalty",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": 0.65,
+      "royalty": 0.95,
+      "ferocity": 0.15,
+      "size": -0.05,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2157,
+      0.3505,
+      0.5122,
+      0.5392,
+      -0.027,
+      0.0809,
+      0.0,
+      0.0,
+      0.0,
+      0.0539,
+      -0.1078,
+      -0.1078,
+      0.0,
+      -0.1078,
+      0.2157,
+      0.4313
+    ],
+    "pca_2d": [
+      0.176,
+      0.631
+    ],
+    "pca_3d": [
+      0.176,
+      0.631,
+      -0.248
+    ],
+    "description": "Female monarch, sovereign queen regnant or consort."
+  },
+  {
+    "word": "prince",
+    "category": "royalty",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": -0.4,
+      "royalty": 0.85,
+      "ferocity": 0.1,
+      "size": 0.0,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2407,
+      -0.2407,
+      0.5114,
+      0.6017,
+      0.0,
+      0.0602,
+      0.0,
+      0.0,
+      0.0,
+      0.0602,
+      -0.1203,
+      -0.1203,
+      0.0,
+      -0.1203,
+      0.1805,
+      0.4212
+    ],
+    "pca_2d": [
+      0.162,
+      0.433
+    ],
+    "pca_3d": [
+      0.162,
+      0.433,
+      -0.181
+    ],
+    "description": "Son of a monarch; young male royal."
+  },
+  {
+    "word": "princess",
+    "category": "royalty",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": -0.4,
+      "royalty": 0.85,
+      "ferocity": 0.05,
+      "size": -0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2406,
+      -0.2406,
+      0.5112,
+      0.6014,
+      -0.0601,
+      0.0301,
+      0.0,
+      0.0,
+      0.0,
+      0.0601,
+      -0.1203,
+      -0.1203,
+      0.0,
+      -0.1203,
+      0.1804,
+      0.421
+    ],
+    "pca_2d": [
+      0.174,
+      0.39
+    ],
+    "pca_3d": [
+      0.174,
+      0.39,
+      -0.237
+    ],
+    "description": "Daughter of a monarch; young female royal."
+  },
+  {
+    "word": "man",
+    "category": "people",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": 0.55,
+      "royalty": -0.7,
+      "ferocity": 0.1,
+      "size": 0.2,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2733,
+      0.3758,
+      -0.4782,
+      0.6832,
+      0.1366,
+      0.0683,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1366,
+      -0.0683,
+      0.0,
+      0.0,
+      0.0,
+      0.205
+    ],
+    "pca_2d": [
+      0.596,
+      0.04
+    ],
+    "pca_3d": [
+      0.596,
+      0.04,
+      0.094
+    ],
+    "description": "Adult human male."
+  },
+  {
+    "word": "woman",
+    "category": "people",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": 0.55,
+      "royalty": -0.7,
+      "ferocity": 0.05,
+      "size": 0.0,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2764,
+      0.38,
+      -0.4836,
+      0.6909,
+      0.0,
+      0.0345,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1382,
+      -0.0691,
+      0.0,
+      0.0,
+      0.0,
+      0.2073
+    ],
+    "pca_2d": [
+      0.634,
+      -0.032
+    ],
+    "pca_3d": [
+      0.634,
+      -0.032,
+      0.007
+    ],
+    "description": "Adult human female."
+  },
+  {
+    "word": "boy",
+    "category": "people",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": -0.7,
+      "royalty": -0.7,
+      "ferocity": 0.05,
+      "size": -0.3,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2613,
+      -0.4574,
+      -0.4574,
+      0.6534,
+      -0.196,
+      0.0327,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1307,
+      -0.0653,
+      0.0,
+      0.0653,
+      -0.0653,
+      0.1307
+    ],
+    "pca_2d": [
+      0.551,
+      -0.433
+    ],
+    "pca_3d": [
+      0.551,
+      -0.433,
+      0.068
+    ],
+    "description": "Young male child."
+  },
+  {
+    "word": "girl",
+    "category": "people",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": -0.7,
+      "royalty": -0.7,
+      "ferocity": 0.0,
+      "size": -0.4,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2577,
+      -0.4509,
+      -0.4509,
+      0.6442,
+      -0.2577,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1288,
+      -0.0644,
+      0.0,
+      0.0644,
+      -0.0644,
+      0.1288
+    ],
+    "pca_2d": [
+      0.554,
+      -0.475
+    ],
+    "pca_3d": [
+      0.554,
+      -0.475,
+      0.007
+    ],
+    "description": "Young female child."
+  },
+  {
+    "word": "father",
+    "category": "family",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": 0.6,
+      "royalty": -0.5,
+      "ferocity": 0.1,
+      "size": 0.2,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2801,
+      0.4201,
+      -0.3501,
+      0.7001,
+      0.14,
+      0.07,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.14,
+      -0.07,
+      0.0,
+      0.0,
+      0.07,
+      0.2801
+    ],
+    "pca_2d": [
+      0.561,
+      0.172
+    ],
+    "pca_3d": [
+      0.561,
+      0.172,
+      0.033
+    ],
+    "description": "Male parent."
+  },
+  {
+    "word": "mother",
+    "category": "family",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": 0.6,
+      "royalty": -0.5,
+      "ferocity": 0.05,
+      "size": 0.0,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2834,
+      0.4251,
+      -0.3542,
+      0.7084,
+      0.0,
+      0.0354,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1417,
+      -0.0708,
+      0.0,
+      0.0,
+      0.0708,
+      0.2834
+    ],
+    "pca_2d": [
+      0.599,
+      0.1
+    ],
+    "pca_3d": [
+      0.599,
+      0.1,
+      -0.057
+    ],
+    "description": "Female parent."
+  },
+  {
+    "word": "grandfather",
+    "category": "family",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": 0.95,
+      "royalty": -0.5,
+      "ferocity": -0.1,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2509,
+      0.5958,
+      -0.3136,
+      0.6271,
+      0.0627,
+      -0.0627,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1254,
+      -0.0627,
+      0.0,
+      0.0,
+      0.0,
+      0.2509
+    ],
+    "pca_2d": [
+      0.529,
+      0.15
+    ],
+    "pca_3d": [
+      0.529,
+      0.15,
+      -0.053
+    ],
+    "description": "Father of one's father or mother."
+  },
+  {
+    "word": "grandmother",
+    "category": "family",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": 0.95,
+      "royalty": -0.5,
+      "ferocity": -0.15,
+      "size": -0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2502,
+      0.5943,
+      -0.3128,
+      0.6256,
+      -0.0626,
+      -0.0938,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1251,
+      -0.0626,
+      0.0,
+      0.0,
+      0.0,
+      0.2502
+    ],
+    "pca_2d": [
+      0.555,
+      0.082
+    ],
+    "pca_3d": [
+      0.555,
+      0.082,
+      -0.133
+    ],
+    "description": "Mother of one's father or mother."
+  },
+  {
+    "word": "uncle",
+    "category": "family",
+    "cmu_features": {
+      "gender": 0.85,
+      "age": 0.55,
+      "royalty": -0.55,
+      "ferocity": 0.05,
+      "size": 0.15,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.2848,
+      0.3916,
+      -0.3916,
+      0.712,
+      0.1068,
+      0.0356,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1424,
+      -0.0712,
+      0.0,
+      0.0,
+      0.0712,
+      0.2492
+    ],
+    "pca_2d": [
+      0.586,
+      0.11
+    ],
+    "pca_3d": [
+      0.586,
+      0.11,
+      0.015
+    ],
+    "description": "Brother of one's parent."
+  },
+  {
+    "word": "aunt",
+    "category": "family",
+    "cmu_features": {
+      "gender": -0.85,
+      "age": 0.55,
+      "royalty": -0.55,
+      "ferocity": 0.0,
+      "size": -0.05,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.2864,
+      0.3939,
+      -0.3939,
+      0.7161,
+      -0.0358,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1432,
+      -0.0716,
+      0.0,
+      0.0,
+      0.0716,
+      0.2506
+    ],
+    "pca_2d": [
+      0.621,
+      0.035
+    ],
+    "pca_3d": [
+      0.621,
+      0.035,
+      -0.077
+    ],
+    "description": "Sister of one's parent."
+  },
+  {
+    "word": "dog",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.2,
+      "royalty": -0.8,
+      "ferocity": 0.3,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0,
+      0.1262,
+      -0.505,
+      0.6312,
+      0.0631,
+      0.1894,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2525,
+      -0.3787,
+      0.0,
+      0.0631,
+      -0.2525,
+      0.1262
+    ],
+    "pca_2d": [
+      0.668,
+      -0.177
+    ],
+    "pca_3d": [
+      0.668,
+      -0.177,
+      0.425
+    ],
+    "description": "Domesticated canine companion."
+  },
+  {
+    "word": "puppy",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": -0.8,
+      "royalty": -0.8,
+      "ferocity": -0.2,
+      "size": -0.6,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0,
+      -0.4332,
+      -0.4332,
+      0.5415,
+      -0.3249,
+      -0.1083,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2166,
+      -0.3249,
+      0.0,
+      0.0542,
+      -0.2166,
+      0.1083
+    ],
+    "pca_2d": [
+      0.551,
+      -0.594
+    ],
+    "pca_3d": [
+      0.551,
+      -0.594,
+      0.127
+    ],
+    "description": "Young juvenile dog."
+  },
+  {
+    "word": "cat",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.15,
+      "royalty": -0.6,
+      "ferocity": 0.2,
+      "size": -0.3,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0,
+      0.1004,
+      -0.4016,
+      0.6693,
+      -0.2008,
+      0.1339,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2677,
+      -0.4016,
+      0.0,
+      0.0,
+      -0.2677,
+      0.1339
+    ],
+    "pca_2d": [
+      0.736,
+      -0.217
+    ],
+    "pca_3d": [
+      0.736,
+      -0.217,
+      0.287
+    ],
+    "description": "Small domesticated carnivorous feline."
+  },
+  {
+    "word": "kitten",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": -0.85,
+      "royalty": -0.6,
+      "ferocity": -0.3,
+      "size": -0.8,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0,
+      -0.4522,
+      -0.3192,
+      0.5321,
+      -0.4256,
+      -0.1596,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2128,
+      -0.3192,
+      0.0,
+      0.0,
+      -0.2128,
+      0.1064
+    ],
+    "pca_2d": [
+      0.529,
+      -0.578
+    ],
+    "pca_3d": [
+      0.529,
+      -0.578,
+      0.033
+    ],
+    "description": "Young juvenile cat."
+  },
+  {
+    "word": "lion",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.2,
+      "age": 0.4,
+      "royalty": 0.6,
+      "ferocity": 0.95,
+      "size": 0.7,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.052,
+      0.2082,
+      0.3122,
+      0.5204,
+      0.3643,
+      0.4944,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2082,
+      -0.3122,
+      0.0,
+      0.0,
+      -0.1561,
+      0.2082
+    ],
+    "pca_2d": [
+      0.271,
+      0.58
+    ],
+    "pca_3d": [
+      0.271,
+      0.58,
+      0.474
+    ],
+    "description": "Large predatory feline; king of the jungle."
+  },
+  {
+    "word": "tiger",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.1,
+      "age": 0.4,
+      "royalty": 0.5,
+      "ferocity": 0.98,
+      "size": 0.75,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0259,
+      0.2075,
+      0.2594,
+      0.5188,
+      0.3891,
+      0.5084,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2075,
+      -0.3113,
+      0.0,
+      0.0519,
+      -0.1556,
+      0.2075
+    ],
+    "pca_2d": [
+      0.276,
+      0.553
+    ],
+    "pca_3d": [
+      0.276,
+      0.553,
+      0.508
+    ],
+    "description": "Apex striped big cat native to Asia."
+  },
+  {
+    "word": "wolf",
+    "category": "animals",
+    "cmu_features": {
+      "gender": 0.1,
+      "age": 0.35,
+      "royalty": 0.1,
+      "ferocity": 0.85,
+      "size": 0.4,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0297,
+      0.2081,
+      0.0595,
+      0.5947,
+      0.2379,
+      0.5055,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2379,
+      -0.3568,
+      0.0,
+      0.1189,
+      -0.2379,
+      0.1784
+    ],
+    "pca_2d": [
+      0.458,
+      0.366
+    ],
+    "pca_3d": [
+      0.458,
+      0.366,
+      0.549
+    ],
+    "description": "Wild predatory pack-hunting canine."
+  },
+  {
+    "word": "france",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.2,
+      "ferocity": -0.2,
+      "size": 0.8,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.1112,
+      -0.3893,
+      0.445,
+      -0.1112,
+      0.445,
+      0.4728,
+      -0.1112,
+      0.0556,
+      0.0556,
+      -0.1112,
+      0.0,
+      0.1112,
+      0.2225,
+      0.3337
+    ],
+    "pca_2d": [
+      -0.792,
+      0.051
+    ],
+    "pca_3d": [
+      -0.792,
+      0.051,
+      0.067
+    ],
+    "description": "Country in Western Europe."
+  },
+  {
+    "word": "paris",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.4,
+      "ferocity": -0.3,
+      "size": 0.5,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.2465,
+      -0.4314,
+      0.3082,
+      -0.1849,
+      0.1233,
+      0.5239,
+      -0.1233,
+      0.0616,
+      0.1233,
+      -0.0616,
+      0.0,
+      0.1233,
+      0.3082,
+      0.4314
+    ],
+    "pca_2d": [
+      -0.849,
+      0.074
+    ],
+    "pca_3d": [
+      -0.849,
+      0.074,
+      -0.114
+    ],
+    "description": "Capital city of France."
+  },
+  {
+    "word": "japan",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.2,
+      "ferocity": -0.2,
+      "size": 0.7,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.1064,
+      -0.3724,
+      0.3724,
+      -0.1064,
+      0.4256,
+      -0.1064,
+      0.4522,
+      -0.1064,
+      0.0532,
+      0.266,
+      0.0,
+      0.2128,
+      0.266,
+      0.3192
+    ],
+    "pca_2d": [
+      -0.772,
+      0.067
+    ],
+    "pca_3d": [
+      -0.772,
+      0.067,
+      -0.065
+    ],
+    "description": "Island country in East Asia."
+  },
+  {
+    "word": "tokyo",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.4,
+      "ferocity": -0.3,
+      "size": 0.6,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.2208,
+      -0.3864,
+      0.3312,
+      -0.1656,
+      0.1104,
+      -0.1104,
+      0.4692,
+      -0.1104,
+      0.1104,
+      0.3312,
+      0.0,
+      0.1656,
+      0.3312,
+      0.3864
+    ],
+    "pca_2d": [
+      -0.807,
+      0.122
+    ],
+    "pca_3d": [
+      -0.807,
+      0.122,
+      -0.207
+    ],
+    "description": "Capital city of Japan."
+  },
+  {
+    "word": "uk",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.5,
+      "ferocity": -0.2,
+      "size": 0.75,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.2614,
+      -0.366,
+      0.3922,
+      -0.1046,
+      0.4183,
+      0.0784,
+      -0.1046,
+      0.4445,
+      0.0523,
+      0.0,
+      0.0,
+      0.2092,
+      0.3137,
+      0.3137
+    ],
+    "pca_2d": [
+      -0.823,
+      0.162
+    ],
+    "pca_3d": [
+      -0.823,
+      0.162,
+      -0.03
+    ],
+    "description": "United Kingdom; island nation in northwestern Europe."
+  },
+  {
+    "word": "london",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.6,
+      "ferocity": -0.3,
+      "size": 0.55,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.3377,
+      -0.3939,
+      0.3095,
+      -0.1688,
+      0.1126,
+      0.0844,
+      -0.1126,
+      0.4784,
+      0.0563,
+      0.0563,
+      0.0,
+      0.1688,
+      0.3939,
+      0.3939
+    ],
+    "pca_2d": [
+      -0.85,
+      0.19
+    ],
+    "pca_3d": [
+      -0.85,
+      0.19,
+      -0.161
+    ],
+    "description": "Capital city of the United Kingdom."
+  },
+  {
+    "word": "germany",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.1,
+      "ferocity": -0.2,
+      "size": 0.78,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0577,
+      -0.4041,
+      0.4503,
+      -0.1155,
+      0.4618,
+      0.3464,
+      -0.0866,
+      0.1155,
+      0.0577,
+      0.2309,
+      0.0,
+      0.0577,
+      0.2886,
+      0.3464
+    ],
+    "pca_2d": [
+      -0.847,
+      0.092
+    ],
+    "pca_3d": [
+      -0.847,
+      0.092,
+      -0.071
+    ],
+    "description": "Country in Central Europe."
+  },
+  {
+    "word": "berlin",
+    "category": "geography",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.3,
+      "ferocity": -0.3,
+      "size": 0.52,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.1889,
+      -0.4407,
+      0.3274,
+      -0.1889,
+      0.1259,
+      0.3777,
+      -0.0944,
+      0.1259,
+      0.063,
+      0.3148,
+      0.0,
+      0.063,
+      0.3777,
+      0.4407
+    ],
+    "pca_2d": [
+      -0.896,
+      0.137
+    ],
+    "pca_3d": [
+      -0.896,
+      0.137,
+      -0.235
+    ],
+    "description": "Capital city of Germany."
+  },
+  {
+    "word": "apple",
+    "category": "food",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": -0.2,
+      "royalty": -0.6,
+      "ferocity": -0.8,
+      "size": -0.6,
+      "animacy": -0.3
+    },
+    "dense_vector": [
+      0.0,
+      -0.1275,
+      -0.3824,
+      -0.1912,
+      -0.3824,
+      -0.5098,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6054,
+      -0.1275,
+      0.0,
+      0.0637,
+      -0.0637,
+      0.0637
+    ],
+    "pca_2d": [
+      -0.233,
+      -0.916
+    ],
+    "pca_3d": [
+      -0.233,
+      -0.916,
+      -0.436
+    ],
+    "description": "Round edible pomaceous fruit."
+  },
+  {
+    "word": "orange",
+    "category": "food",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": -0.2,
+      "royalty": -0.6,
+      "ferocity": -0.8,
+      "size": -0.55,
+      "animacy": -0.3
+    },
+    "dense_vector": [
+      0.0,
+      -0.1305,
+      -0.3915,
+      -0.1957,
+      -0.3589,
+      -0.522,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.6003,
+      -0.1305,
+      0.0,
+      0.0652,
+      -0.0652,
+      0.0652
+    ],
+    "pca_2d": [
+      -0.24,
+      -0.919
+    ],
+    "pca_3d": [
+      -0.24,
+      -0.919,
+      -0.429
+    ],
+    "description": "Citrus fruit with a sweet and sour taste."
+  },
+  {
+    "word": "banana",
+    "category": "food",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": -0.2,
+      "royalty": -0.7,
+      "ferocity": -0.85,
+      "size": -0.5,
+      "animacy": -0.3
+    },
+    "dense_vector": [
+      0.0,
+      -0.1248,
+      -0.4368,
+      -0.1872,
+      -0.312,
+      -0.5304,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5865,
+      -0.156,
+      0.0,
+      0.0624,
+      -0.0624,
+      0.0624
+    ],
+    "pca_2d": [
+      -0.226,
+      -0.93
+    ],
+    "pca_3d": [
+      -0.226,
+      -0.93,
+      -0.399
+    ],
+    "description": "Elongated curved edible fruit rich in potassium."
+  },
+  {
+    "word": "fast",
+    "category": "adjectives",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.0,
+      "ferocity": 0.4,
+      "size": 0.0,
+      "animacy": -0.8
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0,
+      -0.6082,
+      0.0,
+      0.3041,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2281,
+      0.1521,
+      -0.6082,
+      0.0,
+      0.0,
+      0.3041
+    ],
+    "pca_2d": [
+      -0.689,
+      -0.102
+    ],
+    "pca_3d": [
+      -0.689,
+      -0.102,
+      0.433
+    ],
+    "description": "Moving or capable of moving at high speed."
+  },
+  {
+    "word": "faster",
+    "category": "adjectives",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.0,
+      "ferocity": 0.5,
+      "size": 0.0,
+      "animacy": -0.8
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0,
+      -0.7365,
+      0.0,
+      0.4603,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2762,
+      0.1841,
+      0.0,
+      0.0,
+      0.0,
+      0.3682
+    ],
+    "pca_2d": [
+      -0.771,
+      -0.016
+    ],
+    "pca_3d": [
+      -0.771,
+      -0.016,
+      0.455
+    ],
+    "description": "Comparative of fast: speedier."
+  },
+  {
+    "word": "tall",
+    "category": "adjectives",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.0,
+      "ferocity": 0.0,
+      "size": 0.6,
+      "animacy": -0.8
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0,
+      -0.593,
+      0.4447,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2224,
+      0.0,
+      -0.593,
+      0.0,
+      0.0,
+      0.2224
+    ],
+    "pca_2d": [
+      -0.776,
+      -0.083
+    ],
+    "pca_3d": [
+      -0.776,
+      -0.083,
+      0.46
+    ],
+    "description": "Of great or more than average height."
+  },
+  {
+    "word": "taller",
+    "category": "adjectives",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.0,
+      "ferocity": 0.0,
+      "size": 0.75,
+      "animacy": -0.8
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0,
+      -0.6804,
+      0.6379,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2551,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.2551
+    ],
+    "pca_2d": [
+      -0.875,
+      0.016
+    ],
+    "pca_3d": [
+      -0.875,
+      0.016,
+      0.46
+    ],
+    "description": "Comparative of tall: having greater height."
+  },
+  {
+    "word": "walk",
+    "category": "verbs",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": -0.5,
+      "ferocity": -0.4,
+      "size": 0.0,
+      "animacy": 0.6
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      -0.3978,
+      0.4773,
+      0.0,
+      -0.3182,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2387,
+      -0.1591,
+      -0.6364,
+      0.0,
+      0.0,
+      0.1591
+    ],
+    "pca_2d": [
+      0.361,
+      -0.335
+    ],
+    "pca_3d": [
+      0.361,
+      -0.335,
+      0.048
+    ],
+    "description": "Move on foot at a regular pace."
+  },
+  {
+    "word": "walking",
+    "category": "verbs",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": -0.5,
+      "ferocity": -0.4,
+      "size": 0.0,
+      "animacy": 0.6
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      -0.5157,
+      0.6189,
+      0.0,
+      -0.4126,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.3094,
+      -0.2063,
+      0.0,
+      0.0,
+      0.0,
+      0.2063
+    ],
+    "pca_2d": [
+      0.541,
+      -0.338
+    ],
+    "pca_3d": [
+      0.541,
+      -0.338,
+      -0.076
+    ],
+    "description": "Present participle of walk."
+  },
+  {
+    "word": "swim",
+    "category": "verbs",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": -0.5,
+      "ferocity": -0.2,
+      "size": 0.0,
+      "animacy": 0.6
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      -0.3384,
+      0.4061,
+      0.0,
+      -0.1354,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2031,
+      -0.1354,
+      -0.5415,
+      0.5754,
+      0.0,
+      0.1354
+    ],
+    "pca_2d": [
+      0.264,
+      -0.323
+    ],
+    "pca_3d": [
+      0.264,
+      -0.323,
+      0.226
+    ],
+    "description": "Propel the body through water."
+  },
+  {
+    "word": "swimming",
+    "category": "verbs",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": -0.5,
+      "ferocity": -0.2,
+      "size": 0.0,
+      "animacy": 0.6
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      -0.4026,
+      0.4831,
+      0.0,
+      -0.161,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.2416,
+      -0.161,
+      0.0,
+      0.6844,
+      0.0,
+      0.161
+    ],
+    "pca_2d": [
+      0.364,
+      -0.316
+    ],
+    "pca_3d": [
+      0.364,
+      -0.316,
+      0.162
+    ],
+    "description": "Present participle of swim."
+  },
+  {
+    "word": "doctor",
+    "category": "professions",
+    "cmu_features": {
+      "gender": 0.1,
+      "age": 0.5,
+      "royalty": 0.4,
+      "ferocity": -0.3,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0358,
+      0.3578,
+      0.2863,
+      0.7157,
+      0.0716,
+      -0.2147,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.0716,
+      0.2147,
+      0.0,
+      0.0,
+      0.2147,
+      0.3578
+    ],
+    "pca_2d": [
+      0.297,
+      0.504
+    ],
+    "pca_3d": [
+      0.297,
+      0.504,
+      -0.463
+    ],
+    "description": "Qualified practitioner of medicine."
+  },
+  {
+    "word": "nurse",
+    "category": "professions",
+    "cmu_features": {
+      "gender": -0.1,
+      "age": 0.45,
+      "royalty": 0.2,
+      "ferocity": -0.5,
+      "size": 0.0,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      -0.0369,
+      0.3322,
+      0.1476,
+      0.7382,
+      0.0,
+      -0.3691,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.0738,
+      0.1476,
+      0.0,
+      0.0,
+      0.1476,
+      0.3691
+    ],
+    "pca_2d": [
+      0.379,
+      0.317
+    ],
+    "pca_3d": [
+      0.379,
+      0.317,
+      -0.51
+    ],
+    "description": "Person trained to care for the sick or infirm."
+  },
+  {
+    "word": "engineer",
+    "category": "professions",
+    "cmu_features": {
+      "gender": 0.1,
+      "age": 0.45,
+      "royalty": 0.3,
+      "ferocity": -0.2,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0327,
+      0.2945,
+      0.1963,
+      0.6544,
+      0.0654,
+      -0.1309,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.0654,
+      0.5235,
+      0.0,
+      0.0,
+      0.1963,
+      0.3272
+    ],
+    "pca_2d": [
+      0.229,
+      0.472
+    ],
+    "pca_3d": [
+      0.229,
+      0.472,
+      -0.478
+    ],
+    "description": "Person who designs, builds, or maintains engines or machines."
+  },
+  {
+    "word": "scientist",
+    "category": "professions",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.5,
+      "royalty": 0.4,
+      "ferocity": -0.2,
+      "size": 0.1,
+      "animacy": 1.0
+    },
+    "dense_vector": [
+      0.0,
+      0.3221,
+      0.2577,
+      0.6442,
+      0.0644,
+      -0.1288,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.0644,
+      0.4509,
+      0.0,
+      0.0,
+      0.1932,
+      0.3865
+    ],
+    "pca_2d": [
+      0.214,
+      0.517
+    ],
+    "pca_3d": [
+      0.214,
+      0.517,
+      -0.472
+    ],
+    "description": "Person who studies natural or physical sciences."
+  },
+  {
+    "word": "bank",
+    "category": "polysemy",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.1,
+      "ferocity": -0.4,
+      "size": 0.4,
+      "animacy": -0.7
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0835,
+      -0.5843,
+      0.3339,
+      -0.3339,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.0835,
+      -0.0835,
+      0.0,
+      0.3757,
+      0.4591,
+      0.2504
+    ],
+    "pca_2d": [
+      -0.893,
+      -0.125
+    ],
+    "pca_3d": [
+      -0.893,
+      -0.125,
+      -0.007
+    ],
+    "description": "Static Word2Vec vector conflating financial institution and river edge."
+  },
+  {
+    "word": "river",
+    "category": "nature",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.0,
+      "ferocity": 0.2,
+      "size": 0.9,
+      "animacy": -0.4
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.0,
+      -0.2608,
+      0.5868,
+      0.1304,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1956,
+      -0.326,
+      0.0,
+      0.6194,
+      -0.1956,
+      0.0652
+    ],
+    "pca_2d": [
+      -0.433,
+      -0.057
+    ],
+    "pca_3d": [
+      -0.433,
+      -0.057,
+      0.718
+    ],
+    "description": "Natural flowing watercourse."
+  },
+  {
+    "word": "money",
+    "category": "finance",
+    "cmu_features": {
+      "gender": 0.0,
+      "age": 0.0,
+      "royalty": 0.4,
+      "ferocity": -0.5,
+      "size": -0.2,
+      "animacy": -0.9
+    },
+    "dense_vector": [
+      0.0,
+      0.0,
+      0.2549,
+      -0.5735,
+      -0.1275,
+      -0.3186,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -0.1275,
+      -0.0637,
+      0.0,
+      -0.1912,
+      0.6054,
+      0.2549
+    ],
+    "pca_2d": [
+      -0.82,
+      -0.07
+    ],
+    "pca_3d": [
+      -0.82,
+      -0.07,
+      -0.329
+    ],
+    "description": "Current medium of exchange in the form of banknotes and coins."
+  }
+]

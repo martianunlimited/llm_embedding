@@ -1,0 +1,48 @@
+[
+  {
+    "id": "shift-bank",
+    "word": "bank",
+    "sense_a_label": "River Bank (Nature)",
+    "sense_a_sentence": "The fisherman sat on the muddy river bank.",
+    "sense_a_cluster": "Nature / Water",
+    "sense_a_coords": [
+      -0.72,
+      0.58
+    ],
+    "sense_b_label": "Money Bank (Finance)",
+    "sense_b_sentence": "She deposited her paycheck at the local bank.",
+    "sense_b_cluster": "Finance / Commerce",
+    "sense_b_coords": [
+      0.68,
+      -0.42
+    ],
+    "static_coords": [
+      0.05,
+      0.12
+    ],
+    "explanation": "In classical Word2Vec, 'bank' is trapped in a single compromise vector between river and money. In modern Transformer LLMs (GPT/BERT), self-attention computes dot products with surrounding words ('river', 'muddy' vs 'deposit', 'paycheck'), dynamically pulling the token representation into the appropriate semantic subspace."
+  },
+  {
+    "id": "shift-apple",
+    "word": "apple",
+    "sense_a_label": "Fresh Fruit (Food)",
+    "sense_a_sentence": "He sliced a crisp red apple for breakfast.",
+    "sense_a_cluster": "Fruit / Food",
+    "sense_a_coords": [
+      -0.65,
+      -0.75
+    ],
+    "sense_b_label": "Apple Inc. (Tech Giant)",
+    "sense_b_sentence": "Apple released its newest M-series Silicon processor.",
+    "sense_b_cluster": "Technology / Corporate",
+    "sense_b_coords": [
+      0.82,
+      0.6
+    ],
+    "static_coords": [
+      0.1,
+      -0.15
+    ],
+    "explanation": "In Word2Vec, 'apple' clusters strongly near banana and fruit. When used in tech contexts, static embeddings fail to capture the corporate or technological meaning. Modern LLMs project the token into silicon, hardware, and NASDAQ clusters when attended by tech context words."
+  }
+]

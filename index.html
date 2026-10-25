@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Word & Token Embeddings Explorer | Interactive Vector Space Lab</title>
+  <meta name="description" content="Interactive demo exploring word and token embeddings in LLMs: from CMU semantic feature spaces to Jay Alammar's illustrated Word2Vec, vector arithmetic (king - man + woman = queen), and contextual attention.">
+  <meta name="keywords" content="Word2Vec, Word Embeddings, Token Embeddings, Vector Arithmetic, Cosine Similarity, LLM, Transformer Attention, NLP">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
+</head>
+<body>
+
+  <!-- Sticky Header & Navigation -->
+  <header class="app-header">
+    <div class="container nav-wrapper">
+      <a href="#hero" class="brand-badge">
+        <div class="brand-icon">🧭</div>
+        <div>
+          <div class="brand-title">Vector Space &amp; Embeddings</div>
+          <div class="brand-subtitle">CMU &amp; Illustrated Word2Vec Lab</div>
+        </div>
+      </a>
+      <nav class="main-nav" aria-label="Main Navigation">
+        <a href="#cmu-space" class="nav-link">Semantic Features</a>
+        <a href="#heatmaps" class="nav-link">Vector Heatmaps</a>
+        <a href="#analogies" class="nav-link">Analogy Solver</a>
+        <a href="#contextual" class="nav-link">Contextual Shifts</a>
+        <a href="#universe" class="nav-link">PCA Universe</a>
+        <a href="https://martianunlimited.github.io/llm_tokenizer/" class="nav-link" target="_blank" rel="noopener">🔤 Tokenizer Demo</a>
+        <a href="https://github.com/martianunlimited/llm_embedding" class="nav-link nav-cta" target="_blank" rel="noopener">★ GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="container">
+        <div class="hero-pill">
+          <span>✨ Inspired by CMU WordEmbeddingDemo</span>
+          <span>•</span>
+          <span>Jay Alammar's Illustrated Word2Vec</span>
+        </div>
+        <h1 class="hero-title">
+          How Computers Understand Words: <br>
+          <span class="gradient-text">Word &amp; Token Embeddings in Vector Space</span>
+        </h1>
+        <p class="hero-desc">
+          Before a Large Language Model can generate text or reason, words and subword tokens are transformed into 
+          <strong>dense numerical vectors</strong>. Explore how meaning is captured as geometric coordinates, 
+          why vector subtraction and addition solves analogies (<em>king - man + woman = queen</em>), 
+          and how modern LLM self-attention dynamically shifts embeddings based on context.
+        </p>
+
+        <div class="hero-highlights">
+          <div class="highlight-badge">
+            <span>📐</span>
+            <span><strong>CMU Feature Space:</strong> Gender, Age &amp; Royalty dimensions</span>
+          </div>
+          <div class="highlight-badge">
+            <span>🎨</span>
+            <span><strong>Illustrated Heatmaps:</strong> 16D vectors &amp; Cosine angles</span>
+          </div>
+          <div class="highlight-badge">
+            <span>👑</span>
+            <span><strong>Vector Arithmetic:</strong> King - Man + Woman = Queen</span>
+          </div>
+          <div class="highlight-badge">
+            <span>🌊</span>
+            <span><strong>Contextual Attention:</strong> River Bank vs Money Bank</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 1: The Semantic Feature Space (CMU Experience) -->
+    <section id="cmu-space">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Module 1 • CMU Feature Space</span>
+          <h2 class="section-title">Geometric Coordinates &amp; Semantic Features</h2>
+          <p class="section-desc">
+            Consider the words <em>man</em>, <em>woman</em>, <em>boy</em>, and <em>girl</em>. 
+            Two refer to adults and two to children; two refer to males and two to females. 
+            By mapping these attributes to numerical axes, words become points in space.
+          </p>
+        </div>
+
+        <div class="glass-card cmu-studio-grid">
+          <!-- Canvas Plot -->
+          <div class="cmu-canvas-wrapper">
+            <div class="canvas-hud">
+              Click any word point to inspect coordinates &amp; measure Euclidean distance
+            </div>
+            <canvas id="cmu-canvas"></canvas>
+          </div>
+
+          <!-- Controls & Table -->
+          <div class="cmu-controls-panel">
+            <div class="control-group">
+              <span class="control-label">Select Active Preset:</span>
+              <div class="pill-group">
+                <button class="preset-btn cmu-preset-btn active" data-preset="royalty_family">Royalty &amp; Family</button>
+                <button class="preset-btn cmu-preset-btn" data-preset="generations">Three Generations</button>
+                <button class="preset-btn cmu-preset-btn" data-preset="animals">Animals</button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="control-group">
+                <span class="control-label">X-Axis Feature:</span>
+                <select id="cmu-axis-x" class="select-custom" aria-label="X-Axis feature">
+                  <option value="gender" selected>Gender (Female vs Male)</option>
+                  <option value="age">Age (Child vs Elder)</option>
+                  <option value="royalty">Royalty (Commoner vs Royal)</option>
+                  <option value="ferocity">Ferocity (Gentle vs Fierce)</option>
+                  <option value="size">Size (Small vs Large)</option>
+                  <option value="animacy">Animacy (Object vs Living)</option>
+                </select>
+              </div>
+
+              <div class="control-group">
+                <span class="control-label">Y-Axis Feature:</span>
+                <select id="cmu-axis-y" class="select-custom" aria-label="Y-Axis feature">
+                  <option value="gender">Gender (Female vs Male)</option>
+                  <option value="age" selected>Age (Child vs Elder)</option>
+                  <option value="royalty">Royalty (Commoner vs Royal)</option>
+                  <option value="ferocity">Ferocity (Gentle vs Fierce)</option>
+                  <option value="size">Size (Small vs Large)</option>
+                  <option value="animacy">Animacy (Object vs Living)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Coordinate Table -->
+            <div class="control-group">
+              <span class="control-label">Word Coordinate Table:</span>
+              <div style="max-height: 180px; overflow-y: auto;">
+                <table class="word-coord-table">
+                  <thead>
+                    <tr>
+                      <th>Word</th>
+                      <th></th>
+                      <th id="th-x-label">X</th>
+                      <th id="th-y-label">Y</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="cmu-table-body">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Pythagorean Distance Calculation -->
+            <div id="cmu-distance-display" style="font-size: 0.82rem; color: var(--text-muted); background: var(--bg-input); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">
+              Click two words to see Euclidean distance: d = √((x₂ - x₁)² + (y₂ - y₁)²)
+            </div>
+
+            <!-- Analogy Vector Arrow Tool -->
+            <div class="interactive-analogy-tool">
+              <span class="control-label" style="color: var(--accent-amber);">Geometric Analogy Arrow:</span>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button id="btn-cmu-arrow" class="btn-action" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5;">
+                  1. Draw Vector (man ➔ king)
+                </button>
+                <button id="btn-cmu-translate" class="btn-action" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #6ee7b7;">
+                  2. Slide Vector to (woman ➔ ?)
+                </button>
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">
+                Notice how translating the red vector to start from <em>woman</em> points directly at <em>queen</em>!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 2: The Illustrated Vector Heatmap & Cosine Math (Jay Alammar) -->
+    <section id="heatmaps">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Module 2 • Jay Alammar Illustrated</span>
+          <h2 class="section-title">Dense Vector Heatmaps &amp; Cosine Similarity</h2>
+          <p class="section-desc">
+            In modern machine learning, word vectors have 50 to 1,000 continuous dimensions. 
+            Just like a 5-factor personality test scores individuals, an embedding vector colors 
+            the semantic fingerprint of a word.
+          </p>
+        </div>
+
+        <div class="glass-card heatmap-card">
+          <!-- Dropdown selectors -->
+          <div class="heatmap-word-pickers">
+            <div class="picker-box">
+              <span class="control-label">Compare Word A:</span>
+              <select id="heat-word-a-select" class="select-custom" aria-label="Select Word A"></select>
+            </div>
+            <div class="picker-box">
+              <span class="control-label">Compare Word B:</span>
+              <select id="heat-word-b-select" class="select-custom" aria-label="Select Word B"></select>
+            </div>
+          </div>
+
+          <!-- Heatmap Strips -->
+          <div class="vector-strip-wrapper">
+            <div class="vector-strip-header">
+              <span class="vector-strip-title" id="heat-title-a">WORD A</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted)">16-Dimensional Latent Embedding</span>
+            </div>
+            <div id="vector-strip-a" class="vector-strip-dims"></div>
+          </div>
+
+          <div class="vector-strip-wrapper">
+            <div class="vector-strip-header">
+              <span class="vector-strip-title" id="heat-title-b">WORD B</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted)">16-Dimensional Latent Embedding</span>
+            </div>
+            <div id="vector-strip-b" class="vector-strip-dims"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted);">
+            <span>🟦 Blue: Strongly Negative (-1.0)</span>
+            <span>⬛ Dark: Neutral (0.0)</span>
+            <span>🟪 Pink: Strongly Positive (+1.0)</span>
+          </div>
+
+          <!-- Cosine Math Breakdown Box -->
+          <div class="heatmap-math-box">
+            <div class="math-col-left">
+              <div class="metric-highlight">
+                <span class="metric-hl-title">Cosine Similarity Score:</span>
+                <span class="metric-hl-val" id="cos-sim-score">0.0000</span>
+              </div>
+              <div class="angle-gauge-container">
+                <canvas id="angle-gauge-canvas" class="gauge-canvas"></canvas>
+                <div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted)">Geometric Angle:</div>
+                  <div style="font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: #fff;" id="cos-angle-score">0.0°</div>
+                  <div style="font-size: 0.72rem; color: var(--text-secondary)">0° = Identical, 90° = Orthogonal</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="math-col-right">
+              <span class="control-label">The Geometric Formula:</span>
+              <div class="formula-block">
+                cos(θ) = (A · B) / (‖A‖ × ‖B‖)
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.8rem;">
+                <div>Dot Product (A · B): <strong id="math-dot-val" style="color:#a5f3fc">-</strong></div>
+                <div>Euclidean Distance: <strong id="math-euc-val" style="color:#fbcfe8">-</strong></div>
+                <div>Magnitude ‖A‖: <strong id="math-maga-val" style="color:#e2e8f0">-</strong></div>
+                <div>Magnitude ‖B‖: <strong id="math-magb-val" style="color:#e2e8f0">-</strong></div>
+              </div>
+              <p style="font-size: 0.78rem; line-height: 1.5; color: var(--text-muted);">
+                Unlike simple Euclidean distance, cosine similarity measures the <em>orientation</em> of the arrows, 
+                making it robust against variations in word frequency and magnitude.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 3: Vector Arithmetic & Analogy Laboratory -->
+    <section id="analogies">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Module 3 • Semantic Arithmetic</span>
+          <h2 class="section-title">The Analogy Equation Solver</h2>
+          <p class="section-desc">
+            One of the most astonishing breakthroughs in NLP is that relationships between concepts 
+            correspond to vector shifts. Subtracting a concept and adding another navigates to the predicted answer!
+          </p>
+        </div>
+
+        <div class="glass-card analogy-builder-card">
+          <!-- Presets -->
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+            <span class="control-label">Try Famous Analogies:</span>
+            <button class="preset-btn" onclick="loadAnalogyPreset('king', 'man', 'woman')">👑 king - man + woman = queen</button>
+            <button class="preset-btn" onclick="loadAnalogyPreset('paris', 'france', 'japan')">🗼 paris - france + japan = tokyo</button>
+            <button class="preset-btn" onclick="loadAnalogyPreset('puppy', 'dog', 'cat')">🐶 puppy - dog + cat = kitten</button>
+            <button class="preset-btn" onclick="loadAnalogyPreset('walking', 'walk', 'swim')">🏊 walking - walk + swim = swimming</button>
+            <button class="preset-btn" onclick="loadAnalogyPreset('faster', 'fast', 'tall')">📏 faster - fast + tall = taller</button>
+          </div>
+
+          <!-- Interactive Equation Form -->
+          <div class="equation-row">
+            <div class="equation-slot">
+              <span class="slot-label">Word A (Base)</span>
+              <select id="analogy-select-a" class="slot-select" aria-label="Analogy Word A"></select>
+            </div>
+
+            <span class="equation-op">−</span>
+
+            <div class="equation-slot">
+              <span class="slot-label">Word B (Subtract)</span>
+              <select id="analogy-select-b" class="slot-select" aria-label="Analogy Word B"></select>
+            </div>
+
+            <span class="equation-op">+</span>
+
+            <div class="equation-slot">
+              <span class="slot-label">Word C (Add)</span>
+              <select id="analogy-select-c" class="slot-select" aria-label="Analogy Word C"></select>
+            </div>
+
+            <span class="equation-op">=</span>
+
+            <div class="equation-slot">
+              <span class="slot-label" style="color: var(--accent-cyan);">Target Vector (D)</span>
+              <div style="background: rgba(6, 182, 212, 0.15); border: 1px solid var(--accent-cyan); padding: 0.5rem 1rem; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: #fff;">
+                Top Match Below ➔
+              </div>
+            </div>
+          </div>
+
+          <!-- Analogy Matches List -->
+          <div class="analogy-matches-grid">
+            <div>
+              <h3 style="font-family: var(--font-display); font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem;">
+                Nearest Neighbors in 16D Vector Space:
+              </h3>
+              <div id="analogy-matches-list" class="matches-list">
+                <!-- Dynamically populated top 5 matches -->
+              </div>
+            </div>
+
+            <div style="background: var(--bg-elevated); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem;">
+              <h4 style="font-family: var(--font-display); font-size: 0.95rem; color: var(--accent-cyan);">
+                Why Does This Math Actually Work?
+              </h4>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+                In the training corpus, the word <code>king</code> appears in contexts involving royalty and male references. 
+                <code>man</code> appears in male contexts without royalty.
+              </p>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+                Computing <code>vector(king) - vector(man)</code> numerically isolates the <strong>"royalty" direction vector</strong>. 
+                Adding this offset to <code>vector(woman)</code> shifts its position across the gender axis while maintaining royalty, 
+                landing right beside <code>queen</code>!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 4: From Static Word2Vec to Contextual LLM Embeddings -->
+    <section id="contextual">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Module 4 • The Transformer Revolution</span>
+          <h2 class="section-title">Contextual Embeddings: River Bank vs. Money Bank</h2>
+          <p class="section-desc">
+            Classical Word2Vec had a major limitation: every word had exactly <strong>one static vector</strong>. 
+            Modern LLMs use self-attention to dynamically re-project embeddings according to sentence context.
+          </p>
+        </div>
+
+        <div class="glass-card contextual-grid">
+          <div class="contextual-card">
+            <span class="control-label" style="color: var(--accent-cyan);">Sense A: River Bank (Nature)</span>
+            <div class="ctx-sentence">
+              "The fisherman sat on the muddy river <strong>bank</strong> with his rod."
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+              Surrounding tokens (<em>fisherman</em>, <em>muddy</em>, <em>river</em>) attend to <em>bank</em>, 
+              pulling its embedding into the <strong>Nature / Water cluster</strong>.
+            </p>
+          </div>
+
+          <div class="contextual-card">
+            <span class="control-label" style="color: var(--accent-amber);">Sense B: Money Bank (Finance)</span>
+            <div class="ctx-sentence" style="border-left-color: var(--accent-amber);">
+              "She deposited her paycheck at the local commercial <strong>bank</strong>."
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+              Surrounding tokens (<em>deposited</em>, <em>paycheck</em>, <em>commercial</em>) attend to <em>bank</em>, 
+              pulling its embedding into the <strong>Finance / Commerce cluster</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Dynamic Attention Shift Slider & Visualizer -->
+        <div class="glass-card" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+          <h3 style="font-family: var(--font-display); font-size: 1.15rem; color: #fff;">
+            Interactive Self-Attention Vector Shift
+          </h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; max-width: 650px;">
+            Drag the slider below to simulate how the Transformer's Attention layer moves the token representation 
+            from static Word2Vec (center) toward either the Nature or Finance subspace.
+          </p>
+
+          <canvas id="contextual-canvas" style="background:#050810; border:1px solid var(--border-subtle); border-radius: var(--radius-md); max-width: 100%; height: 260px;"></canvas>
+
+          <div style="width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 0.5rem;">
+            <input 
+              type="range" 
+              id="ctx-weight-slider" 
+              min="0" 
+              max="1" 
+              step="0.01" 
+              value="0.5" 
+              class="custom-slider" 
+              style="width: 100%;"
+              aria-label="Attention context weight slider">
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted);">
+              <span>⬅️ River Context</span>
+              <span id="ctx-weight-label" style="color: #fff; font-weight: 600;">Word2Vec Neutral</span>
+              <span>Finance Context ➡️</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Module 5: 2D PCA Semantic Universe -->
+    <section id="universe">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Module 5 • High-Dimensional Map</span>
+          <h2 class="section-title">The 2D PCA Semantic Universe</h2>
+          <p class="section-desc">
+            All 40+ vocabulary words projected from 16 dimensions down to 2 dimensions using 
+            Principal Component Analysis (PCA). Notice how semantically related words naturally cluster together!
+          </p>
+        </div>
+
+        <div class="universe-wrapper">
+          <div class="universe-hud">
+            <span class="universe-hud-title">Universe Filters &amp; Search:</span>
+            <input 
+              type="text" 
+              id="universe-search" 
+              placeholder="Filter by word (e.g. king, dog)..." 
+              class="select-custom" 
+              style="font-size: 0.8rem; padding: 0.35rem 0.6rem;"
+              aria-label="Filter universe by word">
+
+            <div class="category-legend">
+              <span class="legend-tag universe-filter-btn active" data-category="all">All</span>
+              <span class="legend-tag universe-filter-btn" data-category="royalty"><span class="legend-dot" style="background:#ec4899"></span>Royalty</span>
+              <span class="legend-tag universe-filter-btn" data-category="animals"><span class="legend-dot" style="background:#10b981"></span>Animals</span>
+              <span class="legend-tag universe-filter-btn" data-category="geography"><span class="legend-dot" style="background:#06b6d4"></span>Geography</span>
+              <span class="legend-tag universe-filter-btn" data-category="food"><span class="legend-dot" style="background:#f59e0b"></span>Food</span>
+              <span class="legend-tag universe-filter-btn" data-category="verbs"><span class="legend-dot" style="background:#f43f5e"></span>Verbs</span>
+            </div>
+          </div>
+
+          <canvas id="universe-canvas"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <p>
+        Interactive Word &amp; Token Embeddings Explorer. Built with client-side PCA, vector mathematics, 
+        and high-DPI HTML5 Canvas. Zero backend required.
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/martianunlimited/llm_embedding" target="_blank" rel="noopener">GitHub Repository</a>
+        <span>•</span>
+        <a href="https://martianunlimited.github.io/llm_tokenizer/" target="_blank" rel="noopener">Companion Tokenizer Demo</a>
+        <span>•</span>
+        <a href="https://www.cs.cmu.edu/~dst/WordEmbeddingDemo/tutorial.html" target="_blank" rel="noopener">CMU Tutorial</a>
+        <span>•</span>
+        <a href="https://jalammar.github.io/illustrated-word2vec/" target="_blank" rel="noopener">Illustrated Word2Vec</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

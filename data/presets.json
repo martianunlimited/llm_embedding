@@ -1,0 +1,52 @@
+[
+  {
+    "id": "royalty-classic",
+    "category": "royalty",
+    "title": "Royalty Offset: King - Man + Woman = Queen",
+    "word_a": "king",
+    "word_b": "man",
+    "word_c": "woman",
+    "expected_d": "queen",
+    "explanation": "The most famous analogy in NLP. Subtracting the male concept from 'king' leaves royalty; adding 'woman' points directly to 'queen' in vector space."
+  },
+  {
+    "id": "capitals-world",
+    "category": "geography",
+    "title": "Capital & Country: Paris - France + Japan = Tokyo",
+    "word_a": "paris",
+    "word_b": "france",
+    "word_c": "japan",
+    "expected_d": "tokyo",
+    "explanation": "Captures the geopolitical relationship: Vector(France -> Paris) is the capital relation. Adding this relation to Japan results in Tokyo."
+  },
+  {
+    "id": "animals-juvenile",
+    "category": "animals",
+    "title": "Juvenile Animals: Puppy - Dog + Cat = Kitten",
+    "word_a": "puppy",
+    "word_b": "dog",
+    "word_c": "cat",
+    "expected_d": "kitten",
+    "explanation": "Captures the age relation: Vector(Dog -> Puppy) represents juvenile offspring. Applied to Cat, it lands on Kitten."
+  },
+  {
+    "id": "grammar-tenses",
+    "category": "grammar",
+    "title": "Grammar Inflection: Walking - Walk + Swim = Swimming",
+    "word_a": "walking",
+    "word_b": "walk",
+    "word_c": "swim",
+    "expected_d": "swimming",
+    "explanation": "Demonstrates morphological regularity: continuous participle suffix -ing is an almost identical linear shift across regular and irregular verbs."
+  },
+  {
+    "id": "adjectives-comparative",
+    "category": "grammar",
+    "title": "Adjective Degree: Faster - Fast + Tall = Taller",
+    "word_a": "faster",
+    "word_b": "fast",
+    "word_c": "tall",
+    "expected_d": "taller",
+    "explanation": "Captures the comparative degree offset: Vector(Fast -> Faster) encodes the concept of 'more intense degree', shifting Tall to Taller."
+  }
+]
