@@ -1,6 +1,6 @@
 """Tests verifying schema integrity and Pydantic validation."""
 
-from src.schemas import WordItem, SimilarityResult, AnalogyPreset
+from src.schemas import AnalogyPreset, SimilarityResult, WordItem
 
 
 def test_word_item_validation():

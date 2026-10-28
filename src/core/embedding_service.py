@@ -2,9 +2,11 @@
 
 import logging
 import math
+
 import numpy as np
+
 from src.core.dataset_builder import build_embeddings_dataset
-from src.schemas import WordItem, SimilarityResult, NeighborMatch, AnalogyResult
+from src.schemas import AnalogyResult, NeighborMatch, SimilarityResult, WordItem
 
 logger = logging.getLogger(__name__)
 

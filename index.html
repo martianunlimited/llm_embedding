@@ -6,7 +6,7 @@
   <title>LLM Word & Token Embeddings Explorer | Interactive Vector Space Lab</title>
   <meta name="description" content="Interactive demo exploring word and token embeddings in LLMs: from CMU semantic feature spaces to Jay Alammar's illustrated Word2Vec, vector arithmetic (king - man + woman = queen), and contextual attention.">
   <meta name="keywords" content="Word2Vec, Word Embeddings, Token Embeddings, Vector Arithmetic, Cosine Similarity, LLM, Transformer Attention, NLP">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.0.0">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧭</text></svg>">
 </head>
 <body>
@@ -78,26 +78,39 @@
       </div>
     </section>
 
-    <!-- Module 1: The Semantic Feature Space (CMU Experience) -->
+    <!-- Module 1: The Semantic Feature Space (CMU Experience in 3D) -->
     <section id="cmu-space">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Module 1 • CMU Feature Space</span>
-          <h2 class="section-title">Geometric Coordinates &amp; Semantic Features</h2>
+          <span class="section-tag">Module 1 • CMU Feature Space (3D)</span>
+          <h2 class="section-title">3-Dimensional Coordinates &amp; Semantic Features</h2>
           <p class="section-desc">
             Consider the words <em>man</em>, <em>woman</em>, <em>boy</em>, and <em>girl</em>. 
             Two refer to adults and two to children; two refer to males and two to females. 
-            By mapping these attributes to numerical axes, words become points in space.
+            By mapping these attributes across <strong>3 numerical feature axes (X, Y, Z)</strong>, words become points in an interactive, rotatable 3D vector space.
           </p>
         </div>
 
         <div class="glass-card cmu-studio-grid">
-          <!-- Canvas Plot -->
+          <!-- 3D Canvas Plot -->
           <div class="cmu-canvas-wrapper">
             <div class="canvas-hud">
-              Click any word point to inspect coordinates &amp; measure Euclidean distance
+              <span class="hud-action-hint">🖱️ <strong>Drag</strong> to rotate 3D view • <strong>Scroll</strong> to zoom • Click words to inspect</span>
+            </div>
+            <div class="canvas-3d-toolbar">
+              <button id="btn-cmu-autorotate" type="button" class="btn-tool-sm" title="Toggle gentle rotation">
+                <span>🔄 Auto-Rotate</span>
+              </button>
+              <button id="btn-cmu-resetview" type="button" class="btn-tool-sm" title="Reset camera angle">
+                <span>⟲ Reset View</span>
+              </button>
+              <div class="view-toggle-group">
+                <button id="btn-cmu-view-3d" type="button" class="btn-toggle-sm active" data-mode="3d">3D Space</button>
+                <button id="btn-cmu-view-2d" type="button" class="btn-toggle-sm" data-mode="2d">2D Plane</button>
+              </div>
             </div>
             <canvas id="cmu-canvas"></canvas>
+            <div id="cmu-hover-card" class="plot-hover-card" style="display: none;"></div>
           </div>
 
           <!-- Controls & Table -->
@@ -108,12 +121,15 @@
                 <button class="preset-btn cmu-preset-btn active" data-preset="royalty_family">Royalty &amp; Family</button>
                 <button class="preset-btn cmu-preset-btn" data-preset="generations">Three Generations</button>
                 <button class="preset-btn cmu-preset-btn" data-preset="animals">Animals</button>
+                <button class="preset-btn cmu-preset-btn" data-preset="geography">Capitals</button>
+                <button class="preset-btn cmu-preset-btn" data-preset="all">All Words (47)</button>
               </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <!-- 3 Dimension Selectors: X, Y, Z -->
+            <div class="cmu-axes-grid">
               <div class="control-group">
-                <span class="control-label">X-Axis Feature:</span>
+                <span class="control-label axis-label-x">X-Axis (Width):</span>
                 <select id="cmu-axis-x" class="select-custom" aria-label="X-Axis feature">
                   <option value="gender" selected>Gender (Female vs Male)</option>
                   <option value="age">Age (Child vs Elder)</option>
@@ -125,7 +141,7 @@
               </div>
 
               <div class="control-group">
-                <span class="control-label">Y-Axis Feature:</span>
+                <span class="control-label axis-label-y">Y-Axis (Height):</span>
                 <select id="cmu-axis-y" class="select-custom" aria-label="Y-Axis feature">
                   <option value="gender">Gender (Female vs Male)</option>
                   <option value="age" selected>Age (Child vs Elder)</option>
@@ -135,20 +151,32 @@
                   <option value="animacy">Animacy (Object vs Living)</option>
                 </select>
               </div>
+
+              <div class="control-group">
+                <span class="control-label axis-label-z">Z-Axis (Depth):</span>
+                <select id="cmu-axis-z" class="select-custom" aria-label="Z-Axis feature">
+                  <option value="gender">Gender (Female vs Male)</option>
+                  <option value="age">Age (Child vs Elder)</option>
+                  <option value="royalty" selected>Royalty (Commoner vs Royal)</option>
+                  <option value="ferocity">Ferocity (Gentle vs Fierce)</option>
+                  <option value="size">Size (Small vs Large)</option>
+                  <option value="animacy">Animacy (Object vs Living)</option>
+                </select>
+              </div>
             </div>
 
             <!-- Coordinate Table -->
             <div class="control-group">
-              <span class="control-label">Word Coordinate Table:</span>
+              <span class="control-label">3D Word Coordinate Table:</span>
               <div style="max-height: 180px; overflow-y: auto;">
                 <table class="word-coord-table">
                   <thead>
                     <tr>
                       <th>Word</th>
-                      <th></th>
+                      <th>Category</th>
                       <th id="th-x-label">X</th>
                       <th id="th-y-label">Y</th>
-                      <th></th>
+                      <th id="th-z-label">Z</th>
                     </tr>
                   </thead>
                   <tbody id="cmu-table-body">
@@ -160,22 +188,22 @@
 
             <!-- Pythagorean Distance Calculation -->
             <div id="cmu-distance-display" style="font-size: 0.82rem; color: var(--text-muted); background: var(--bg-input); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm);">
-              Click two words to see Euclidean distance: d = √((x₂ - x₁)² + (y₂ - y₁)²)
+              Click two words to see 3D Euclidean distance: d = √((x₂ - x₁)² + (y₂ - y₁)² + (z₂ - z₁)²)
             </div>
 
             <!-- Analogy Vector Arrow Tool -->
             <div class="interactive-analogy-tool">
-              <span class="control-label" style="color: var(--accent-amber);">Geometric Analogy Arrow:</span>
+              <span class="control-label" style="color: var(--accent-amber);">3D Geometric Analogy Arrow:</span>
               <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button id="btn-cmu-arrow" class="btn-action" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #fca5a5;">
-                  1. Draw Vector (man ➔ king)
+                  1. Draw 3D Vector (man ➔ king)
                 </button>
                 <button id="btn-cmu-translate" class="btn-action" style="background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #6ee7b7;">
-                  2. Slide Vector to (woman ➔ ?)
+                  2. Slide 3D Vector to (woman ➔ ?)
                 </button>
               </div>
               <p style="font-size: 0.78rem; color: var(--text-muted);">
-                Notice how translating the red vector to start from <em>woman</em> points directly at <em>queen</em>!
+                Translating the red vector in 3D space to start from <em>woman</em> points directly at <em>queen</em> across all 3 dimensions!
               </p>
             </div>
           </div>
@@ -423,40 +451,65 @@
       </div>
     </section>
 
-    <!-- Module 5: 2D PCA Semantic Universe -->
+    <!-- Module 5: 3D PCA Semantic Universe -->
     <section id="universe">
       <div class="container">
         <div class="section-header">
-          <span class="section-tag">Module 5 • High-Dimensional Map</span>
-          <h2 class="section-title">The 2D PCA Semantic Universe</h2>
+          <span class="section-tag">Module 5 • 3D High-Dimensional Map</span>
+          <h2 class="section-title">The 3D PCA Semantic Universe</h2>
           <p class="section-desc">
-            All 40+ vocabulary words projected from 16 dimensions down to 2 dimensions using 
-            Principal Component Analysis (PCA). Notice how semantically related words naturally cluster together!
+            All 47 vocabulary words projected from 16 dimensions down to 3 principal components ($PC_1, PC_2, PC_3$) using 
+            Principal Component Analysis (PCA). Drag to freely rotate the 3D semantic cloud and discover how embeddings cluster across depth!
           </p>
         </div>
 
         <div class="universe-wrapper">
           <div class="universe-hud">
-            <span class="universe-hud-title">Universe Filters &amp; Search:</span>
+            <div class="universe-hud-header">
+              <span class="universe-hud-title">3D Universe Explorer</span>
+              <div class="universe-hud-tools">
+                <button id="btn-universe-autorotate" type="button" class="btn-tool-sm active" title="Toggle gentle rotation">
+                  <span>🔄 Auto-Rotate</span>
+                </button>
+                <button id="btn-universe-resetview" type="button" class="btn-tool-sm" title="Reset 3D camera angle">
+                  <span>⟲ Reset View</span>
+                </button>
+                <div class="view-toggle-group">
+                  <button id="btn-universe-view-3d" type="button" class="btn-toggle-sm active" data-mode="3d">3D</button>
+                  <button id="btn-universe-view-2d" type="button" class="btn-toggle-sm" data-mode="2d">2D</button>
+                </div>
+              </div>
+            </div>
+
             <input 
               type="text" 
               id="universe-search" 
-              placeholder="Filter by word (e.g. king, dog)..." 
+              placeholder="Search / filter word (e.g. king, dog, tokyo)..." 
               class="select-custom" 
-              style="font-size: 0.8rem; padding: 0.35rem 0.6rem;"
+              style="font-size: 0.8rem; padding: 0.4rem 0.65rem;"
               aria-label="Filter universe by word">
 
             <div class="category-legend">
-              <span class="legend-tag universe-filter-btn active" data-category="all">All</span>
+              <span class="legend-tag universe-filter-btn active" data-category="all">All (47)</span>
               <span class="legend-tag universe-filter-btn" data-category="royalty"><span class="legend-dot" style="background:#ec4899"></span>Royalty</span>
+              <span class="legend-tag universe-filter-btn" data-category="people"><span class="legend-dot" style="background:#6366f1"></span>People</span>
+              <span class="legend-tag universe-filter-btn" data-category="family"><span class="legend-dot" style="background:#818cf8"></span>Family</span>
               <span class="legend-tag universe-filter-btn" data-category="animals"><span class="legend-dot" style="background:#10b981"></span>Animals</span>
               <span class="legend-tag universe-filter-btn" data-category="geography"><span class="legend-dot" style="background:#06b6d4"></span>Geography</span>
               <span class="legend-tag universe-filter-btn" data-category="food"><span class="legend-dot" style="background:#f59e0b"></span>Food</span>
               <span class="legend-tag universe-filter-btn" data-category="verbs"><span class="legend-dot" style="background:#f43f5e"></span>Verbs</span>
+              <span class="legend-tag universe-filter-btn" data-category="professions"><span class="legend-dot" style="background:#38bdf8"></span>Professions</span>
             </div>
+
+            <div id="universe-selection-badge" class="universe-detail-card" style="display: none;"></div>
+          </div>
+
+          <div class="universe-bottom-hint">
+            <span>🖱️ <strong>Click &amp; Drag</strong> to rotate in 3D • <strong>Wheel</strong> to zoom • Click word to view semantic neighbors</span>
           </div>
 
           <canvas id="universe-canvas"></canvas>
+          <div id="universe-hover-card" class="plot-hover-card" style="display: none;"></div>
         </div>
       </div>
     </section>
@@ -481,6 +534,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2.0.0"></script>
 </body>
 </html>

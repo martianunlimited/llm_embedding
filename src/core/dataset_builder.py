@@ -3,10 +3,12 @@
 import json
 import logging
 from pathlib import Path
+
 import numpy as np
 from sklearn.decomposition import PCA
+
 from src.config import settings
-from src.schemas import WordItem, AnalogyPreset, ContextualShiftItem
+from src.schemas import AnalogyPreset, ContextualShiftItem, WordItem
 
 logger = logging.getLogger(__name__)
 

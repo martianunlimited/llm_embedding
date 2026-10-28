@@ -14,11 +14,12 @@ It visually and mathematically unpacks how words and tokens are represented in v
 
 ## 🧭 Interactive Modules in the Demo
 
-### 1. Semantic Feature Space (The CMU Experience)
-* **2D & 3D Interactive Feature Axes:** Map words across interpretable semantic features: `Gender` (Female vs Male), `Age` (Child vs Elder), `Royalty` (Commoner vs Monarch), `Ferocity` (Gentle vs Fierce), and `Size`.
-* **Pythagorean Distance Calculation:** Click any two words to calculate and visualize straight-line Euclidean distance:
-  $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
-* **Geometric Analogy Arrow:** Draw the vector $\vec{v}_{\text{man} \to \text{king}}$, slide it across the canvas to start at $\text{woman}$, and watch the arrow point directly to $\text{queen}$!
+### 1. 3D Semantic Feature Space (The CMU Experience)
+* **Rotatable 3D Coordinate Plot:** Map words across 3 freely selectable feature axes (X, Y, Z): `Gender` (Female vs Male), `Age` (Child vs Elder), `Royalty` (Commoner vs Monarch), `Ferocity` (Gentle vs Fierce), `Size`, and `Animacy`.
+* **Perspective Controls:** Click and drag to rotate the 3D cube (pitch & yaw), scroll to zoom, toggle gentle auto-rotation, or switch between 3D Space and 2D Plane.
+* **3D Pythagorean Distance Calculation:** Click any two words to calculate and visualize straight-line 3D Euclidean distance:
+  $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 + (z_2 - z_1)^2}$$
+* **3D Geometric Analogy Arrow:** Draw the 3D vector $\vec{v}_{\text{man} \to \text{king}}$, slide it across 3D space to start at $\text{woman}$, and watch the arrow point directly to $\text{queen}$ across all 3 dimensions!
 
 ### 2. Dense Vector Heatmaps & Cosine Math (The Jay Alammar Experience)
 * **Personality Vectors Metaphor:** Just as 5 numbers quantify personality traits in psychology, a vector of numbers captures the semantic fingerprint of a word.
@@ -43,9 +44,10 @@ It visually and mathematically unpacks how words and tokens are represented in v
   $$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
   Watch the vector smoothly glide across 2D space from neutral static position toward the **Water / Nature cluster** or toward the **Finance cluster**!
 
-### 5. 2D PCA Semantic Universe
-* All 40+ vocabulary words projected from 16 dimensions down to 2 dimensions using Principal Component Analysis (PCA).
-* Category filters (Royalty, People, Family, Animals, Geography, Food, Verbs, Professions) and instant keyword search.
+### 5. 3D PCA Semantic Universe
+* **Rotatable 3D Semantic Cloud:** All 47 vocabulary words projected from 16 dimensions down to 3 principal components ($PC_1, PC_2, PC_3$) using Principal Component Analysis (PCA).
+* **Interactive Exploration:** Drag to rotate in 3D, scroll to zoom, hover for coordinate tooltips, and click any word to draw glowing 3D constellation lines to its nearest semantic neighbors.
+* **Filters & Search:** Filter by category (Royalty, People, Family, Animals, Geography, Food, Verbs, Professions) and instant keyword search in 3D space.
 
 ---
 

@@ -3,8 +3,9 @@
 import typer
 from rich.console import Console
 from rich.table import Table
-from src.core.embedding_service import EmbeddingService
+
 from src.core.dataset_builder import export_all_embedding_data
+from src.core.embedding_service import EmbeddingService
 
 app = typer.Typer(help="Interactive Word & Token Embedding CLI Explorer")
 console = Console()

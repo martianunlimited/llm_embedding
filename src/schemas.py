@@ -1,6 +1,7 @@
 """Domain schemas for word and token embeddings, vector arithmetic, and similarity."""
 
 from typing import Literal
+
 from pydantic import BaseModel, Field
 
 

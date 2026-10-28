@@ -1,6 +1,7 @@
 """Configuration settings for embedding demo using pydantic-settings."""
 
 from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 

@@ -1,6 +1,7 @@
 """Tests for core EmbeddingService (TDD red-green tests)."""
 
 import pytest
+
 from src.core.embedding_service import EmbeddingService
 
 
