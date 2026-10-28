@@ -48,3 +48,65 @@ def test_app_js_contains_3d_logic():
     assert "btn-cmu-autorotate" in app_js
     assert "btn-universe-autorotate" in app_js
     assert "startAnimationLoop" in app_js
+
+
+def test_modules_element_ids_consistency():
+    base = Path(__file__).resolve().parent.parent
+    html = (base / "index.html").read_text(encoding="utf-8")
+    app_js = (base / "app.js").read_text(encoding="utf-8")
+
+    # Module 2 IDs
+    mod2_ids = [
+        "heat-word-a-select",
+        "heat-word-b-select",
+        "heat-title-a",
+        "heat-title-b",
+        "vector-strip-a",
+        "vector-strip-b",
+        "cos-sim-score",
+        "cos-angle-score",
+        "angle-gauge-canvas",
+        "math-dot-val",
+        "math-euc-val",
+        "math-maga-val",
+        "math-magb-val",
+    ]
+    for mid in mod2_ids:
+        assert f'id="{mid}"' in html or f"id='{mid}'" in html
+        assert f'getElementById("{mid}")' in app_js
+
+    # Module 3 IDs
+    mod3_ids = [
+        "analogy-select-a",
+        "analogy-select-b",
+        "analogy-select-c",
+        "analogy-matches-list",
+    ]
+    for mid in mod3_ids:
+        assert f'id="{mid}"' in html or f"id='{mid}'" in html
+        assert f'getElementById("{mid}")' in app_js
+    assert "loadAnalogyPreset" in app_js
+
+    # Module 4 IDs
+    mod4_ids = [
+        "contextual-canvas",
+        "ctx-weight-slider",
+        "ctx-weight-label",
+    ]
+    for mid in mod4_ids:
+        assert f'id="{mid}"' in html or f"id='{mid}'" in html
+        assert f'getElementById("{mid}")' in app_js
+
+    # Module 5 IDs
+    mod5_ids = [
+        "universe-canvas",
+        "universe-search",
+        "universe-selection-badge",
+        "universe-hover-card",
+        "btn-universe-autorotate",
+        "btn-universe-resetview",
+    ]
+    for mid in mod5_ids:
+        assert f'id="{mid}"' in html or f"id='{mid}'" in html
+        assert f'getElementById("{mid}")' in app_js
+

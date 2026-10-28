@@ -2012,6 +2012,16 @@ function vectorNorm(vec) {
   return Math.hypot(...vec);
 }
 
+function magnitude(vec) {
+  return Math.hypot(...vec);
+}
+
+function normalize(v) {
+  const norm = vectorNorm(v);
+  if (norm === 0) return v.slice();
+  return v.map(x => x / norm);
+}
+
 function cosineSimilarity(vecA, vecB) {
   const normA = vectorNorm(vecA);
   const normB = vectorNorm(vecB);
@@ -2034,6 +2044,28 @@ function vectorAdd(vecA, vecB) {
 
 function vectorSubtract(vecA, vecB) {
   return vecA.map((val, i) => val - (vecB[i] || 0));
+}
+
+function getHeatmapColor(val) {
+  // val is between -1.0 and +1.0
+  // Negative: Blue scale (6, 182, 212) -> (15, 23, 42)
+  // Positive: Pink/Magenta scale (236, 72, 153)
+  // Zero: Dark Slate (15, 23, 42)
+  if (val > 0) {
+    const intensity = Math.min(1, val);
+    const r = Math.round(15 + intensity * (236 - 15));
+    const g = Math.round(23 + intensity * (72 - 23));
+    const b = Math.round(42 + intensity * (153 - 42));
+    return `rgb(${r}, ${g}, ${b})`;
+  } else if (val < 0) {
+    const intensity = Math.min(1, Math.abs(val));
+    const r = Math.round(15 + intensity * (6 - 15));
+    const g = Math.round(23 + intensity * (182 - 23));
+    const b = Math.round(42 + intensity * (212 - 42));
+    return `rgb(${r}, ${g}, ${b})`;
+  } else {
+    return "#0f172a";
+  }
 }
 
 // ==========================================================================
@@ -2065,11 +2097,13 @@ function initCMUCanvas() {
   // Resize canvas for sharp retina displays
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  const width = rect.width > 50 ? rect.width : 760;
+  const height = rect.height > 50 ? rect.height : 520;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
   ctx.scale(dpr, dpr);
 
-  drawCMUSpace(ctx, rect.width, rect.height);
+  drawCMUSpace(ctx, width, height);
 
   let isDragging = false;
   let startX = 0;
@@ -2087,6 +2121,8 @@ function initCMUCanvas() {
 
   const onPointerMove = (clientX, clientY) => {
     const cRect = canvas.getBoundingClientRect();
+    const w = cRect.width > 50 ? cRect.width : width;
+    const h = cRect.height > 50 ? cRect.height : height;
     const mx = clientX - cRect.left;
     const my = clientY - cRect.top;
 
@@ -2103,7 +2139,7 @@ function initCMUCanvas() {
       startX = clientX;
       startY = clientY;
 
-      drawCMUSpace(ctx, cRect.width, cRect.height);
+      drawCMUSpace(ctx, w, h);
       return;
     }
 
@@ -2127,14 +2163,18 @@ function initCMUCanvas() {
         const fx = state.cmuAxisX;
         const fy = state.cmuAxisY;
         const fz = state.cmuAxisZ;
+        const valX = hovered.cmu_features?.[fx] ?? 0;
+        const valY = hovered.cmu_features?.[fy] ?? 0;
+        const valZ = hovered.cmu_features?.[fz] ?? 0;
+
         hoverCard.style.display = "block";
         hoverCard.style.left = `${hovered._cmuProj.px}px`;
         hoverCard.style.top = `${hovered._cmuProj.py}px`;
         hoverCard.innerHTML = `
           <strong>${hovered.word.toUpperCase()}</strong> <span style="color:#94a3b8">(${hovered.category})</span><br>
-          <span style="color:#38bdf8">${fx}: ${hovered.cmu_features[fx].toFixed(2)}</span> | 
-          <span style="color:#f472b6">${fy}: ${hovered.cmu_features[fy].toFixed(2)}</span> | 
-          <span style="color:#34d399">${fz}: ${hovered.cmu_features[fz].toFixed(2)}</span>
+          <span style="color:#38bdf8">${fx}: ${valX.toFixed(2)}</span> | 
+          <span style="color:#f472b6">${fy}: ${valY.toFixed(2)}</span> | 
+          <span style="color:#34d399">${fz}: ${valZ.toFixed(2)}</span>
         `;
         canvas.style.cursor = "pointer";
       } else if (hoverCard) {
@@ -2171,7 +2211,9 @@ function initCMUCanvas() {
           state.cmuSelectedA = closest.word;
         }
         renderCMUWordTable();
-        drawCMUSpace(ctx, cRect.width, cRect.height);
+        const w = cRect.width > 50 ? cRect.width : width;
+        const h = cRect.height > 50 ? cRect.height : height;
+        drawCMUSpace(ctx, w, h);
       }
     }
     isDragging = false;
@@ -2214,25 +2256,29 @@ function initCMUCanvas() {
     const zoomDelta = e.deltaY * -0.0015;
     state.cmuZoom = Math.max(0.5, Math.min(2.5, state.cmuZoom + zoomDelta));
     const cRect = canvas.getBoundingClientRect();
-    drawCMUSpace(ctx, cRect.width, cRect.height);
+    const w = cRect.width > 50 ? cRect.width : width;
+    const h = cRect.height > 50 ? cRect.height : height;
+    drawCMUSpace(ctx, w, h);
   }, { passive: false });
 
   // Resize listener
   window.addEventListener("resize", () => {
     const r = canvas.getBoundingClientRect();
-    canvas.width = r.width * dpr;
-    canvas.height = r.height * dpr;
+    const w = r.width > 50 ? r.width : 760;
+    const h = r.height > 50 ? r.height : 520;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
-    drawCMUSpace(ctx, r.width, r.height);
+    drawCMUSpace(ctx, w, h);
   });
 }
 
 function drawCMUSpace(ctx, width, height) {
   ctx.clearRect(0, 0, width, height);
 
-  const featX = state.cmuAxisX;
-  const featY = state.cmuAxisY;
-  const featZ = state.cmuAxisZ;
+  const featX = state.cmuAxisX || "gender";
+  const featY = state.cmuAxisY || "age";
+  const featZ = state.cmuAxisZ || "royalty";
   const words = getCMUPresetWords();
 
   if (state.cmuViewMode === "2d") {
@@ -2301,8 +2347,6 @@ function drawCMUSpace(ctx, width, height) {
   });
 
   // 3. Principal Axes through Origin (0, 0, 0)
-  const o = camera.project(0, 0, 0, centerX, centerY);
-
   // X Axis (Cyan)
   const xNeg = camera.project(-1, 0, 0, centerX, centerY);
   const xPos = camera.project(1, 0, 0, centerX, centerY);
@@ -2351,27 +2395,27 @@ function drawCMUSpace(ctx, width, height) {
 
   // 4. Analogy Vectors in 3D
   if (state.cmuShowArrow) {
-    const fromW = state.byWord[state.cmuArrowFrom];
-    const toW = state.byWord[state.cmuArrowTo];
+    const fromW = state.byWord[state.cmuArrowFrom?.toLowerCase()];
+    const toW = state.byWord[state.cmuArrowTo?.toLowerCase()];
 
     if (fromW && toW) {
-      const fx = fromW.cmu_features[featX];
-      const fy = fromW.cmu_features[featY];
-      const fz = fromW.cmu_features[featZ];
-      const tx = toW.cmu_features[featX];
-      const ty = toW.cmu_features[featY];
-      const tz = toW.cmu_features[featZ];
+      const fx = fromW.cmu_features?.[featX] ?? 0;
+      const fy = fromW.cmu_features?.[featY] ?? 0;
+      const fz = fromW.cmu_features?.[featZ] ?? 0;
+      const tx = toW.cmu_features?.[featX] ?? 0;
+      const ty = toW.cmu_features?.[featY] ?? 0;
+      const tz = toW.cmu_features?.[featZ] ?? 0;
 
       const pf = camera.project(fx, fy, fz, centerX, centerY);
       const pt = camera.project(tx, ty, tz, centerX, centerY);
       drawArrow(ctx, pf.px, pf.py, pt.px, pt.py, "#ef4444", 3);
 
       if (state.cmuShowTranslation) {
-        const transW = state.byWord[state.cmuTranslatedFrom];
+        const transW = state.byWord[state.cmuTranslatedFrom?.toLowerCase()];
         if (transW) {
-          const sx = transW.cmu_features[featX];
-          const sy = transW.cmu_features[featY];
-          const sz = transW.cmu_features[featZ];
+          const sx = transW.cmu_features?.[featX] ?? 0;
+          const sy = transW.cmu_features?.[featY] ?? 0;
+          const sz = transW.cmu_features?.[featZ] ?? 0;
 
           const ex = sx + (tx - fx);
           const ey = sy + (ty - fy);
@@ -2386,17 +2430,17 @@ function drawCMUSpace(ctx, width, height) {
   }
 
   // 5. 3D Euclidean Distance Line
-  const itemA = state.byWord[state.cmuSelectedA];
-  const itemB = state.byWord[state.cmuSelectedB];
+  const itemA = state.byWord[state.cmuSelectedA?.toLowerCase()];
+  const itemB = state.byWord[state.cmuSelectedB?.toLowerCase()];
 
   if (itemA && itemB && itemA !== itemB) {
-    const ax = itemA.cmu_features[featX];
-    const ay = itemA.cmu_features[featY];
-    const az = itemA.cmu_features[featZ];
+    const ax = itemA.cmu_features?.[featX] ?? 0;
+    const ay = itemA.cmu_features?.[featY] ?? 0;
+    const az = itemA.cmu_features?.[featZ] ?? 0;
 
-    const bx = itemB.cmu_features[featX];
-    const by = itemB.cmu_features[featY];
-    const bz = itemB.cmu_features[featZ];
+    const bx = itemB.cmu_features?.[featX] ?? 0;
+    const by = itemB.cmu_features?.[featY] ?? 0;
+    const bz = itemB.cmu_features?.[featZ] ?? 0;
 
     const pa = camera.project(ax, ay, az, centerX, centerY);
     const pb = camera.project(bx, by, bz, centerX, centerY);
@@ -2424,9 +2468,9 @@ function drawCMUSpace(ctx, width, height) {
 
   // 6. Project & Sort Points by Depth
   const projectedWords = words.map(w => {
-    const vx = w.cmu_features[featX];
-    const vy = w.cmu_features[featY];
-    const vz = w.cmu_features[featZ];
+    const vx = w.cmu_features?.[featX] ?? 0;
+    const vy = w.cmu_features?.[featY] ?? 0;
+    const vz = w.cmu_features?.[featZ] ?? 0;
     const proj = camera.project(vx, vy, vz, centerX, centerY);
     const floorProj = camera.project(vx, -1, vz, centerX, centerY);
     w._cmuProj = proj;
@@ -2439,7 +2483,7 @@ function drawCMUSpace(ctx, width, height) {
 
   // 7. Draw Drop Shadows & Points
   projectedWords.forEach(w => {
-    const { px, py, depth, scale } = w._cmuProj;
+    const { px, py, scale } = w._cmuProj;
     const floor = w._cmuFloor;
     const isSelected = (w.word === state.cmuSelectedA || w.word === state.cmuSelectedB);
 
@@ -2491,121 +2535,109 @@ function drawCMUSpace(ctx, width, height) {
 }
 
 function drawCMUSpace2D(ctx, width, height, words, featX, featY) {
-  const padLeft = 60;
-  const padRight = 60;
-  const padTop = 50;
-  const padBottom = 50;
-  const plotW = width - padLeft - padRight;
-  const plotH = height - padTop - padBottom;
+  const pad = 50;
+  const plotW = width - pad * 2;
+  const plotH = height - pad * 2;
+  const cx = width / 2;
+  const cy = height / 2;
 
-  // Grid
+  // Grid lines
   ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
   ctx.lineWidth = 1;
-  for (let f = -1; f <= 1; f += 0.5) {
-    const gx = ((f + 1) / 2) * plotW + padLeft;
+  for (let x = pad; x <= width - pad; x += plotW / 6) {
     ctx.beginPath();
-    ctx.moveTo(gx, padTop);
-    ctx.lineTo(gx, height - padBottom);
+    ctx.moveTo(x, pad);
+    ctx.lineTo(x, height - pad);
     ctx.stroke();
-
-    const gy = (1 - (f + 1) / 2) * plotH + padTop;
+  }
+  for (let y = pad; y <= height - pad; y += plotH / 6) {
     ctx.beginPath();
-    ctx.moveTo(padLeft, gy);
-    ctx.lineTo(width - padRight, gy);
+    ctx.moveTo(pad, y);
+    ctx.lineTo(width - pad, y);
     ctx.stroke();
   }
 
-  // Axes at 0,0
-  const originX = padLeft + plotW / 2;
-  const originY = padTop + plotH / 2;
-
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+  // Central Axes
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
   ctx.lineWidth = 1.5;
+
   ctx.beginPath();
-  ctx.moveTo(padLeft, originY);
-  ctx.lineTo(width - padRight, originY);
+  ctx.moveTo(pad, cy);
+  ctx.lineTo(width - pad, cy);
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.moveTo(originX, padTop);
-  ctx.lineTo(originX, height - padBottom);
+  ctx.moveTo(cx, pad);
+  ctx.lineTo(cx, height - pad);
   ctx.stroke();
 
   // Axis Labels
-  ctx.font = "600 12px Inter, sans-serif";
+  ctx.font = "600 11px Inter, sans-serif";
   ctx.fillStyle = "#38bdf8";
   ctx.textAlign = "right";
-  ctx.fillText(`+ ${featX.toUpperCase()}`, width - padRight, originY - 8);
+  ctx.fillText(`+ ${featX} ➔`, width - pad - 6, cy - 8);
   ctx.textAlign = "left";
-  ctx.fillText(`- ${featX.toUpperCase()}`, padLeft, originY - 8);
+  ctx.fillText(`⬅ - ${featX}`, pad + 6, cy - 8);
 
   ctx.fillStyle = "#f472b6";
   ctx.textAlign = "center";
-  ctx.fillText(`+ ${featY.toUpperCase()}`, originX, padTop - 12);
-  ctx.fillText(`- ${featY.toUpperCase()}`, originX, height - padBottom + 24);
+  ctx.fillText(`+ ${featY} ⬆`, cx, pad + 16);
+  ctx.fillText(`⬇ - ${featY}`, cx, height - pad - 10);
 
-  // 2D Distance
-  const itemA = state.byWord[state.cmuSelectedA];
-  const itemB = state.byWord[state.cmuSelectedB];
-  if (itemA && itemB && itemA !== itemB) {
-    const ax = ((itemA.cmu_features[featX] + 1) / 2) * plotW + padLeft;
-    const ay = (1 - (itemA.cmu_features[featY] + 1) / 2) * plotH + padTop;
-    const bx = ((itemB.cmu_features[featX] + 1) / 2) * plotW + padLeft;
-    const by = (1 - (itemB.cmu_features[featY] + 1) / 2) * plotH + padTop;
+  // Analogy Arrow (2D)
+  if (state.cmuShowArrow) {
+    const fromW = state.byWord[state.cmuArrowFrom?.toLowerCase()];
+    const toW = state.byWord[state.cmuArrowTo?.toLowerCase()];
+    if (fromW && toW) {
+      const fx = ((fromW.cmu_features?.[featX] ?? 0) + 1) / 2 * plotW + pad;
+      const fy = (1 - ((fromW.cmu_features?.[featY] ?? 0) + 1) / 2) * plotH + pad;
+      const tx = ((toW.cmu_features?.[featX] ?? 0) + 1) / 2 * plotW + pad;
+      const ty = (1 - ((toW.cmu_features?.[featY] ?? 0) + 1) / 2) * plotH + pad;
+      drawArrow(ctx, fx, fy, tx, ty, "#ef4444", 3);
 
-    ctx.strokeStyle = "#f59e0b";
-    ctx.lineWidth = 2;
-    ctx.setLineDash([4, 4]);
-    ctx.beginPath();
-    ctx.moveTo(ax, ay);
-    ctx.lineTo(bx, by);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    const midX = (ax + bx) / 2;
-    const midY = (ay + by) / 2;
-    const dist2D = Math.hypot(itemA.cmu_features[featX] - itemB.cmu_features[featX], itemA.cmu_features[featY] - itemB.cmu_features[featY]).toFixed(2);
-    ctx.fillStyle = "rgba(245, 158, 11, 0.9)";
-    ctx.fillRect(midX - 28, midY - 12, 56, 20);
-    ctx.fillStyle = "#000";
-    ctx.font = "700 11px JetBrains Mono, monospace";
-    ctx.textAlign = "center";
-    ctx.fillText(`d=${dist2D}`, midX, midY + 2);
+      if (state.cmuShowTranslation) {
+        const transW = state.byWord[state.cmuTranslatedFrom?.toLowerCase()];
+        if (transW) {
+          const sx = ((transW.cmu_features?.[featX] ?? 0) + 1) / 2 * plotW + pad;
+          const sy = (1 - ((transW.cmu_features?.[featY] ?? 0) + 1) / 2) * plotH + pad;
+          const ex = sx + (tx - fx);
+          const ey = sy + (ty - fy);
+          drawArrow(ctx, sx, sy, ex, ey, "#10b981", 3);
+        }
+      }
+    }
   }
 
-  // 2D Points
+  // Plot Points
   words.forEach(w => {
-    const vx = w.cmu_features[featX];
-    const vy = w.cmu_features[featY];
-    const px = ((vx + 1) / 2) * plotW + padLeft;
-    const py = (1 - (vy + 1) / 2) * plotH + padTop;
+    const rawX = w.cmu_features?.[featX] ?? 0;
+    const rawY = w.cmu_features?.[featY] ?? 0;
+    const px = ((rawX + 1) / 2) * plotW + pad;
+    const py = (1 - (rawY + 1) / 2) * plotH + pad;
     w._cmuProj = { px, py, depth: 0, scale: 1 };
 
     const isSelected = (w.word === state.cmuSelectedA || w.word === state.cmuSelectedB);
+    const color = isSelected ? "#f59e0b" : (CATEGORY_COLORS[w.category] || "#818cf8");
 
     ctx.beginPath();
-    ctx.arc(px, py, isSelected ? 12 : 7, 0, Math.PI * 2);
-    ctx.fillStyle = isSelected ? "rgba(245, 158, 11, 0.4)" : "rgba(99, 102, 241, 0.25)";
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.arc(px, py, isSelected ? 7 : 4.5, 0, Math.PI * 2);
-    ctx.fillStyle = isSelected ? "#fbbf24" : (CATEGORY_COLORS[w.category] || "#818cf8");
+    ctx.arc(px, py, isSelected ? 8 : 5, 0, Math.PI * 2);
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.strokeStyle = "#fff";
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
-    ctx.font = isSelected ? "700 13px Inter, sans-serif" : "500 11px Inter, sans-serif";
+    ctx.font = isSelected ? "700 12px Inter, sans-serif" : "500 11px Inter, sans-serif";
     ctx.fillStyle = isSelected ? "#fff" : "#cbd5e1";
     ctx.textAlign = "center";
-    ctx.fillText(w.word, px, py - 12);
+    ctx.fillText(w.word, px, py - 10);
   });
 }
 
-function drawArrow(ctx, fromX, fromY, toX, toY, color, width) {
+function drawArrow(ctx, fromX, fromY, toX, toY, color, width = 2) {
   const headlen = 12;
   const angle = Math.atan2(toY - fromY, toX - fromX);
+
   ctx.strokeStyle = color;
   ctx.fillStyle = color;
   ctx.lineWidth = width;
@@ -2629,9 +2661,9 @@ function renderCMUWordTable() {
   tbody.innerHTML = "";
 
   const words = getCMUPresetWords();
-  const featX = state.cmuAxisX;
-  const featY = state.cmuAxisY;
-  const featZ = state.cmuAxisZ;
+  const featX = state.cmuAxisX || "gender";
+  const featY = state.cmuAxisY || "age";
+  const featZ = state.cmuAxisZ || "royalty";
 
   // Update table headers
   const thX = document.getElementById("th-x-label");
@@ -2647,12 +2679,16 @@ function renderCMUWordTable() {
       tr.className = "selected";
     }
 
+    const valX = w.cmu_features?.[featX] ?? 0;
+    const valY = w.cmu_features?.[featY] ?? 0;
+    const valZ = w.cmu_features?.[featZ] ?? 0;
+
     tr.innerHTML = `
       <td><strong>${w.word}</strong></td>
       <td><span class="match-category" style="color: ${CATEGORY_COLORS[w.category] || '#94a3b8'}">${w.category}</span></td>
-      <td style="color:#38bdf8">${w.cmu_features[featX].toFixed(2)}</td>
-      <td style="color:#f472b6">${w.cmu_features[featY].toFixed(2)}</td>
-      <td style="color:#34d399">${w.cmu_features[featZ].toFixed(2)}</td>
+      <td style="color:#38bdf8">${valX.toFixed(2)}</td>
+      <td style="color:#f472b6">${valY.toFixed(2)}</td>
+      <td style="color:#34d399">${valZ.toFixed(2)}</td>
     `;
 
     tr.addEventListener("click", () => {
@@ -2665,7 +2701,10 @@ function renderCMUWordTable() {
       const canvas = document.getElementById("cmu-canvas");
       if (canvas) {
         const dpr = window.devicePixelRatio || 1;
-        drawCMUSpace(canvas.getContext("2d"), canvas.width / dpr, canvas.height / dpr);
+        const rect = canvas.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawCMUSpace(canvas.getContext("2d"), w, h);
       }
     });
 
@@ -2673,13 +2712,13 @@ function renderCMUWordTable() {
   });
 
   // Update distance calculation HUD
-  const itemA = state.byWord[state.cmuSelectedA];
-  const itemB = state.byWord[state.cmuSelectedB];
+  const itemA = state.byWord[state.cmuSelectedA?.toLowerCase()];
+  const itemB = state.byWord[state.cmuSelectedB?.toLowerCase()];
   const distInfo = document.getElementById("cmu-distance-display");
   if (distInfo && itemA && itemB) {
-    const dx = itemA.cmu_features[featX] - itemB.cmu_features[featX];
-    const dy = itemA.cmu_features[featY] - itemB.cmu_features[featY];
-    const dz = itemA.cmu_features[featZ] - itemB.cmu_features[featZ];
+    const dx = (itemA.cmu_features?.[featX] ?? 0) - (itemB.cmu_features?.[featX] ?? 0);
+    const dy = (itemA.cmu_features?.[featY] ?? 0) - (itemB.cmu_features?.[featY] ?? 0);
+    const dz = (itemA.cmu_features?.[featZ] ?? 0) - (itemB.cmu_features?.[featZ] ?? 0);
     const dist3D = Math.hypot(dx, dy, dz).toFixed(3);
     distInfo.innerHTML = `3D Distance between <strong>${itemA.word}</strong> &amp; <strong>${itemB.word}</strong> = <code>${dist3D}</code> across [${featX}, ${featY}, ${featZ}]`;
   }
@@ -2690,104 +2729,125 @@ function renderCMUWordTable() {
 // ==========================================================================
 
 function renderHeatmapModule() {
-  const itemA = state.byWord[state.heatWordA];
-  const itemB = state.byWord[state.heatWordB];
+  const itemA = state.byWord[state.heatWordA?.toLowerCase()];
+  const itemB = state.byWord[state.heatWordB?.toLowerCase()];
   if (!itemA || !itemB) return;
 
-  const vecA = itemA.dense_vector;
-  const vecB = itemB.dense_vector;
+  const titleA = document.getElementById("heat-title-a");
+  if (titleA) titleA.textContent = itemA.word.toUpperCase();
+  const titleB = document.getElementById("heat-title-b");
+  if (titleB) titleB.textContent = itemB.word.toUpperCase();
 
-  // Render heatmaps
-  renderVectorGrid("heatmap-vector-a", vecA);
-  renderVectorGrid("heatmap-vector-b", vecB);
+  const stripA = document.getElementById("vector-strip-a");
+  const stripB = document.getElementById("vector-strip-b");
+  if (!stripA || !stripB) return;
+  stripA.innerHTML = "";
+  stripB.innerHTML = "";
 
-  // Cosine math calculations
-  const dot = dotProduct(vecA, vecB);
-  const normA = vectorNorm(vecA);
-  const normB = vectorNorm(vecB);
-  const cosSim = normA && normB ? dot / (normA * normB) : 0;
-  const clippedCos = Math.max(-1, Math.min(1, cosSim));
-  const angleDeg = Math.acos(clippedCos) * (180 / Math.PI);
+  const dimNames = [
+    "Gender", "Age", "Royalty", "Animacy", "Size", "Ferocity", "Nation", "France",
+    "Japan", "UK", "Food", "Tech", "Degree", "Water", "Finance", "Abstract"
+  ];
 
-  document.getElementById("heat-dot-product").textContent = dot.toFixed(4);
-  document.getElementById("heat-norm-a").textContent = normA.toFixed(4);
-  document.getElementById("heat-norm-b").textContent = normB.toFixed(4);
-  document.getElementById("heat-cosine-score").textContent = cosSim.toFixed(4);
-  document.getElementById("heat-angle-deg").textContent = `${angleDeg.toFixed(1)}°`;
+  for (let i = 0; i < 16; i++) {
+    const valA = itemA.dense_vector[i] ?? 0;
+    const valB = itemB.dense_vector[i] ?? 0;
 
-  // Draw angle gauge on canvas
-  drawAngleGauge(angleDeg, cosSim);
-}
+    // Cell A
+    const cellA = document.createElement("div");
+    cellA.className = "dim-cell";
+    cellA.style.backgroundColor = getHeatmapColor(valA);
+    cellA.textContent = valA >= 0 ? `+${valA.toFixed(1)}` : valA.toFixed(1);
+    cellA.title = `Dim ${i + 1} (${dimNames[i]}): ${valA.toFixed(4)}`;
+    stripA.appendChild(cellA);
 
-function renderVectorGrid(containerId, vector) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  container.innerHTML = "";
-
-  vector.forEach((val, idx) => {
-    const cell = document.createElement("div");
-    cell.className = "vector-cell";
-    const bg = getDivergingColor(val);
-    cell.style.backgroundColor = bg;
-    cell.title = `Dim ${idx + 1}: ${val.toFixed(3)}`;
-    cell.textContent = val.toFixed(2);
-    container.appendChild(cell);
-  });
-}
-
-function getDivergingColor(val) {
-  // Diverging color scale: -1.0 (blue) -> 0.0 (dark gray) -> +1.0 (magenta/red)
-  const norm = Math.max(-1, Math.min(1, val));
-  if (norm < 0) {
-    const intensity = Math.round(-norm * 200 + 40);
-    return `rgb(30, 60, ${intensity})`;
-  } else {
-    const intensity = Math.round(norm * 210 + 35);
-    return `rgb(${intensity}, 25, ${Math.round(intensity * 0.7)})`;
+    // Cell B
+    const cellB = document.createElement("div");
+    cellB.className = "dim-cell";
+    cellB.style.backgroundColor = getHeatmapColor(valB);
+    cellB.textContent = valB >= 0 ? `+${valB.toFixed(1)}` : valB.toFixed(1);
+    cellB.title = `Dim ${i + 1} (${dimNames[i]}): ${valB.toFixed(4)}`;
+    stripB.appendChild(cellB);
   }
+
+  // Calculate Cosine Similarity & Math Breakdown
+  const dot = dotProduct(itemA.dense_vector, itemB.dense_vector);
+  const magA = vectorNorm(itemA.dense_vector);
+  const magB = vectorNorm(itemB.dense_vector);
+  const cosSim = (magA > 0 && magB > 0) ? Math.max(-1, Math.min(1, dot / (magA * magB))) : 0;
+  const angleRad = Math.acos(cosSim);
+  const angleDeg = (angleRad * (180 / Math.PI)).toFixed(1);
+  const eucDist = euclideanDistance(itemA.dense_vector, itemB.dense_vector).toFixed(3);
+
+  const cosSimEl = document.getElementById("cos-sim-score");
+  if (cosSimEl) cosSimEl.textContent = cosSim.toFixed(4);
+
+  const cosAngleEl = document.getElementById("cos-angle-score");
+  if (cosAngleEl) cosAngleEl.textContent = `${angleDeg}°`;
+
+  const dotEl = document.getElementById("math-dot-val");
+  if (dotEl) dotEl.textContent = dot.toFixed(4);
+
+  const magAEl = document.getElementById("math-maga-val");
+  if (magAEl) magAEl.textContent = magA.toFixed(3);
+
+  const magBEl = document.getElementById("math-magb-val");
+  if (magBEl) magBEl.textContent = magB.toFixed(3);
+
+  const eucEl = document.getElementById("math-euc-val");
+  if (eucEl) eucEl.textContent = eucDist;
+
+  // Draw Angle Gauge
+  drawAngleGauge(angleRad);
 }
 
-function drawAngleGauge(angleDeg, cosSim) {
-  const canvas = document.getElementById("angle-canvas");
+function drawAngleGauge(angleRad) {
+  const canvas = document.getElementById("angle-gauge-canvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
-  const w = canvas.width / dpr;
-  const h = canvas.height / dpr;
-  ctx.clearRect(0, 0, w, h);
+  const size = 90;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  ctx.scale(dpr, dpr);
 
-  const cx = w / 2;
-  const cy = h / 2;
-  const radius = Math.min(cx, cy) - 20;
+  ctx.clearRect(0, 0, size, size);
 
-  // Background circle
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-  ctx.lineWidth = 2;
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = 35;
+
+  // Outer circle track
   ctx.beginPath();
-  ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+  ctx.lineWidth = 4;
   ctx.stroke();
 
-  // Vector A (Base horizontal line)
+  // Vector A (along 0 deg, horizontal right)
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + r, cy);
   ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.lineTo(cx + radius, cy);
+  ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Vector B (Rotated by angle)
-  const rad = -angleDeg * (Math.PI / 180);
+  // Vector B (at angle)
+  const bx = cx + r * Math.cos(-angleRad);
+  const by = cy + r * Math.sin(-angleRad);
+
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(bx, by);
   ctx.strokeStyle = "#f472b6";
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  ctx.lineTo(cx + radius * Math.cos(rad), cy + radius * Math.sin(rad));
+  ctx.lineWidth = 2.5;
   ctx.stroke();
 
-  // Angle arc
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.8)";
-  ctx.lineWidth = 2;
+  // Arc between vectors
   ctx.beginPath();
-  ctx.arc(cx, cy, radius * 0.45, rad, 0, false);
+  ctx.arc(cx, cy, 18, 0, -angleRad, true);
+  ctx.strokeStyle = "#f59e0b";
+  ctx.lineWidth = 2;
   ctx.stroke();
 }
 
@@ -2796,148 +2856,169 @@ function drawAngleGauge(angleDeg, cosSim) {
 // ==========================================================================
 
 function solveCurrentAnalogy() {
-  const itemA = state.byWord[state.analogyA];
-  const itemB = state.byWord[state.analogyB];
-  const itemC = state.byWord[state.analogyC];
+  const wordA = state.analogyA;
+  const wordB = state.analogyB;
+  const wordC = state.analogyC;
+
+  const itemA = state.byWord[wordA?.toLowerCase()];
+  const itemB = state.byWord[wordB?.toLowerCase()];
+  const itemC = state.byWord[wordC?.toLowerCase()];
+
   if (!itemA || !itemB || !itemC) return;
 
-  // Vector equation: Target = A - B + C
-  const targetVec = vectorAdd(vectorSubtract(itemA.dense_vector, itemB.dense_vector), itemC.dense_vector);
+  const va = itemA.dense_vector;
+  const vb = itemB.dense_vector;
+  const vc = itemC.dense_vector;
 
-  // Compute cosine similarity to all vocabulary words
-  const exclude = new Set([itemA.word, itemB.word, itemC.word]);
-  const scores = state.words
-    .filter(w => !exclude.has(w.word))
-    .map(w => ({
-      word: w.word,
-      category: w.category,
-      score: cosineSimilarity(targetVec, w.dense_vector)
-    }))
-    .sort((a, b) => b.score - a.score);
+  // Target Vector = A - B + C
+  const target = [];
+  for (let i = 0; i < 16; i++) {
+    target.push((va[i] ?? 0) - (vb[i] ?? 0) + (vc[i] ?? 0));
+  }
+  const normTarget = normalize(target);
 
-  const topMatches = scores.slice(0, 5);
+  // Score all words in dataset (excluding A, B, C)
+  const exclude = new Set([wordA.toLowerCase(), wordB.toLowerCase(), wordC.toLowerCase()]);
+  const ranked = [];
 
-  // Render top matches table
-  const resultsContainer = document.getElementById("analogy-results-list");
-  if (!resultsContainer) return;
-  resultsContainer.innerHTML = "";
+  state.words.forEach(w => {
+    if (exclude.has(w.word.toLowerCase())) return;
+    const sim = cosineSimilarity(normTarget, w.dense_vector);
+    const dist = euclideanDistance(normTarget, w.dense_vector);
+    ranked.push({ word: w.word, category: w.category, similarity: sim, distance: dist });
+  });
 
-  topMatches.forEach((match, rank) => {
-    const row = document.createElement("div");
-    row.className = `match-row ${rank === 0 ? "best-match" : ""}`;
-    const pct = Math.max(0, Math.min(100, (match.score * 100))).toFixed(1);
-    row.innerHTML = `
-      <div class="match-rank">#${rank + 1}</div>
-      <div class="match-name">
-        <strong>${match.word}</strong>
+  ranked.sort((a, b) => b.similarity - a.similarity);
+  renderAnalogyMatches(ranked.slice(0, 5));
+}
+
+function renderAnalogyMatches(top5) {
+  const container = document.getElementById("analogy-matches-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  top5.forEach((match, idx) => {
+    const item = document.createElement("div");
+    item.className = "match-item";
+    const pct = Math.max(0, Math.min(100, (match.similarity * 100))).toFixed(1);
+
+    item.innerHTML = `
+      <div class="match-item-left">
+        <span class="match-rank">#${idx + 1}</span>
+        <span class="match-word">${match.word}</span>
         <span class="match-category" style="color: ${CATEGORY_COLORS[match.category] || '#38bdf8'}">${match.category}</span>
       </div>
-      <div class="match-bar-wrap">
-        <div class="match-bar" style="width: ${pct}%;"></div>
+      <div class="match-item-right">
+        <div class="match-sim-bar-wrap">
+          <div class="match-sim-bar" style="width: ${pct}%"></div>
+        </div>
+        <span class="match-sim-val">${match.similarity.toFixed(4)}</span>
       </div>
-      <div class="match-score">${match.score.toFixed(4)}</div>
     `;
-    resultsContainer.appendChild(row);
+    container.appendChild(item);
   });
 }
+
+window.loadAnalogyPreset = function(a, b, c) {
+  state.analogyA = a;
+  state.analogyB = b;
+  state.analogyC = c;
+
+  const selA = document.getElementById("analogy-select-a");
+  const selB = document.getElementById("analogy-select-b");
+  const selC = document.getElementById("analogy-select-c");
+  if (selA) selA.value = a;
+  if (selB) selB.value = b;
+  if (selC) selC.value = c;
+
+  solveCurrentAnalogy();
+};
 
 // ==========================================================================
 // Module 4: Contextual Shift (River Bank vs Money Bank)
 // ==========================================================================
 
 function updateContextualShift() {
+  const t = state.ctxWeight; // 0.0 to 1.0
   const canvas = document.getElementById("contextual-canvas");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  const w = rect.width > 50 ? rect.width : 420;
+  const h = rect.height > 50 ? rect.height : 260;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
   ctx.scale(dpr, dpr);
 
-  const width = rect.width;
-  const height = rect.height;
-  ctx.clearRect(0, 0, width, height);
+  ctx.clearRect(0, 0, w, h);
 
-  const sliderVal = (state.ctxWeight - 0.5) * 2; // -1 (river) to +1 (finance)
+  const riverX = w * 0.22;
+  const riverY = h * 0.5;
+  const moneyX = w * 0.78;
+  const moneyY = h * 0.5;
+  const staticX = w * 0.5;
+  const staticY = h * 0.5;
 
-  const leftX = width * 0.22;
-  const rightX = width * 0.78;
-  const centerY = height * 0.5;
-
-  // River/Nature Cluster (Left)
-  ctx.fillStyle = "rgba(45, 212, 191, 0.12)";
+  // River Cluster
   ctx.beginPath();
-  ctx.arc(leftX, centerY, 55, 0, Math.PI * 2);
+  ctx.arc(riverX, riverY, 45, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(6, 182, 212, 0.12)";
   ctx.fill();
-  ctx.strokeStyle = "rgba(45, 212, 191, 0.4)";
+  ctx.strokeStyle = "rgba(6, 182, 212, 0.35)";
   ctx.stroke();
-
-  ctx.fillStyle = "#2dd4bf";
-  ctx.font = "700 12px Inter";
+  ctx.fillStyle = "#38bdf8";
+  ctx.font = "600 11px Inter, sans-serif";
   ctx.textAlign = "center";
-  ctx.fillText("🌊 Water / Nature Cluster", leftX, centerY - 25);
-  ctx.font = "500 11px Inter";
-  ctx.fillStyle = "#94a3b8";
-  ctx.fillText("river • water • stream", leftX, centerY + 28);
+  ctx.fillText("🌊 Water / Nature Cluster", riverX, riverY - 55);
 
-  // Finance/Money Cluster (Right)
-  ctx.fillStyle = "rgba(132, 204, 22, 0.12)";
+  // Money Cluster
   ctx.beginPath();
-  ctx.arc(rightX, centerY, 55, 0, Math.PI * 2);
+  ctx.arc(moneyX, moneyY, 45, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(245, 158, 11, 0.12)";
   ctx.fill();
-  ctx.strokeStyle = "rgba(132, 204, 22, 0.4)";
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.35)";
   ctx.stroke();
+  ctx.fillStyle = "#fbbf24";
+  ctx.fillText("💰 Finance Cluster", moneyX, moneyY - 55);
 
-  ctx.fillStyle = "#84cc16";
-  ctx.font = "700 12px Inter";
-  ctx.fillText("💰 Finance / Money Cluster", rightX, centerY - 25);
-  ctx.font = "500 11px Inter";
-  ctx.fillStyle = "#94a3b8";
-  ctx.fillText("money • deposit • cash", rightX, centerY + 28);
+  // SliderVal: -1 (full river) to +1 (full money), 0 = static Word2Vec
+  const sliderVal = (t - 0.5) * 2; // -1 to +1
+  let curX = staticX;
+  if (sliderVal < 0) {
+    curX = staticX + sliderVal * (staticX - riverX);
+  } else {
+    curX = staticX + sliderVal * (moneyX - staticX);
+  }
 
   // Connecting path
   ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
   ctx.setLineDash([4, 4]);
   ctx.beginPath();
-  ctx.moveTo(leftX, centerY);
-  ctx.lineTo(rightX, centerY);
+  ctx.moveTo(riverX, riverY);
+  ctx.lineTo(moneyX, moneyY);
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Interpolated position for "bank"
-  const midX = width * 0.5;
-  const curX = midX + sliderVal * (width * 0.28);
-
-  // Faint Static Ghost at center
+  // Word Point
   ctx.beginPath();
-  ctx.arc(midX, centerY, 6, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(255, 255, 255, 0.25)";
-  ctx.fill();
-  ctx.font = "500 10px Inter";
-  ctx.fillStyle = "#64748b";
-  ctx.fillText("Static Word2Vec", midX, centerY + 18);
-
-  // Dynamic Contextual Vector
-  const shiftColor = sliderVal < 0 ? "#2dd4bf" : (sliderVal > 0 ? "#84cc16" : "#fbbf24");
-  ctx.beginPath();
-  ctx.arc(curX, centerY, 14, 0, Math.PI * 2);
-  ctx.fillStyle = `${shiftColor}33`;
+  ctx.arc(curX, staticY, 14, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(236, 72, 153, 0.35)";
   ctx.fill();
 
   ctx.beginPath();
-  ctx.arc(curX, centerY, 7, 0, Math.PI * 2);
-  ctx.fillStyle = shiftColor;
+  ctx.arc(curX, staticY, 7, 0, Math.PI * 2);
+  ctx.fillStyle = "#ec4899";
   ctx.fill();
   ctx.strokeStyle = "#fff";
   ctx.lineWidth = 2;
   ctx.stroke();
 
   ctx.fillStyle = "#fff";
-  ctx.font = "700 13px Inter";
-  ctx.fillText("bank", curX, centerY - 18);
+  ctx.font = "700 13px Inter, sans-serif";
+  ctx.fillText("bank", curX, staticY - 20);
 
-  // Text label update
+  // Description update
   const label = document.getElementById("ctx-weight-label");
   if (label) {
     if (Math.abs(sliderVal) < 0.15) {
@@ -2960,11 +3041,13 @@ function initUniverseCanvas() {
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
+  const width = rect.width > 50 ? rect.width : 760;
+  const height = rect.height > 50 ? rect.height : 520;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
   ctx.scale(dpr, dpr);
 
-  drawUniverse(ctx, rect.width, rect.height);
+  drawUniverse(ctx, width, height);
 
   let isDragging = false;
   let startX = 0;
@@ -2982,6 +3065,8 @@ function initUniverseCanvas() {
 
   const onPointerMove = (clientX, clientY) => {
     const cRect = canvas.getBoundingClientRect();
+    const w = cRect.width > 50 ? cRect.width : width;
+    const h = cRect.height > 50 ? cRect.height : height;
     const mx = clientX - cRect.left;
     const my = clientY - cRect.top;
 
@@ -2997,7 +3082,7 @@ function initUniverseCanvas() {
       startX = clientX;
       startY = clientY;
 
-      drawUniverse(ctx, cRect.width, cRect.height);
+      drawUniverse(ctx, w, h);
       return;
     }
 
@@ -3019,7 +3104,7 @@ function initUniverseCanvas() {
       const hoverCard = document.getElementById("universe-hover-card");
 
       if (hovered && hoverCard) {
-        const [p1, p2, p3] = hovered.pca_3d;
+        const [p1, p2, p3] = hovered.pca_3d || [0, 0, 0];
         hoverCard.style.display = "block";
         hoverCard.style.left = `${hovered._univProj.px}px`;
         hoverCard.style.top = `${hovered._univProj.py}px`;
@@ -3035,7 +3120,7 @@ function initUniverseCanvas() {
         canvas.style.cursor = isDragging ? "grabbing" : "grab";
       }
 
-      drawUniverse(ctx, cRect.width, cRect.height);
+      drawUniverse(ctx, w, h);
     }
   };
 
@@ -3060,12 +3145,20 @@ function initUniverseCanvas() {
       if (closest) {
         state.universeSelectedWord = (state.universeSelectedWord === closest.word) ? null : closest.word;
         renderUniverseDetailCard(closest);
-        drawUniverse(ctx, cRect.width, cRect.height);
+      } else {
+        state.universeSelectedWord = null;
+        renderUniverseDetailCard(null);
       }
+
+      const w = cRect.width > 50 ? cRect.width : width;
+      const h = cRect.height > 50 ? cRect.height : height;
+      drawUniverse(ctx, w, h);
     }
     isDragging = false;
+    canvas.style.cursor = "grab";
   };
 
+  // Mouse handlers
   canvas.addEventListener("mousedown", (e) => onPointerDown(e.clientX, e.clientY));
   window.addEventListener("mousemove", (e) => {
     if (isDragging) onPointerMove(e.clientX, e.clientY);
@@ -3096,16 +3189,20 @@ function initUniverseCanvas() {
     const zoomDelta = e.deltaY * -0.0015;
     state.universeZoom = Math.max(0.5, Math.min(2.5, state.universeZoom + zoomDelta));
     const cRect = canvas.getBoundingClientRect();
-    drawUniverse(ctx, cRect.width, cRect.height);
+    const w = cRect.width > 50 ? cRect.width : width;
+    const h = cRect.height > 50 ? cRect.height : height;
+    drawUniverse(ctx, w, h);
   }, { passive: false });
 
   // Resize listener
   window.addEventListener("resize", () => {
     const r = canvas.getBoundingClientRect();
-    canvas.width = r.width * dpr;
-    canvas.height = r.height * dpr;
+    const w = r.width > 50 ? r.width : 760;
+    const h = r.height > 50 ? r.height : 520;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
-    drawUniverse(ctx, r.width, r.height);
+    drawUniverse(ctx, w, h);
   });
 }
 
@@ -3119,13 +3216,13 @@ function renderUniverseDetailCard(wordObj) {
   }
 
   // Find 3 nearest neighbors in PCA 3D space
-  const [x1, y1, z1] = wordObj.pca_3d;
+  const [x1, y1, z1] = wordObj.pca_3d || [0, 0, 0];
   const neighbors = state.words
     .filter(w => w.word !== wordObj.word)
     .map(w => ({
       word: w.word,
       category: w.category,
-      dist: Math.hypot(w.pca_3d[0] - x1, w.pca_3d[1] - y1, w.pca_3d[2] - z1)
+      dist: Math.hypot((w.pca_3d?.[0] ?? 0) - x1, (w.pca_3d?.[1] ?? 0) - y1, (w.pca_3d?.[2] ?? 0) - z1)
     }))
     .sort((a, b) => a.dist - b.dist)
     .slice(0, 3);
@@ -3259,7 +3356,7 @@ function drawUniverse(ctx, width, height) {
 
   // 4. Project & Sort Words
   const projectedWords = state.words.map(w => {
-    const [rawX, rawY, rawZ] = w.pca_3d;
+    const [rawX, rawY, rawZ] = w.pca_3d || [0, 0, 0];
     const proj = camera.project(rawX, rawY, rawZ, centerX, centerY);
     const floorProj = camera.project(rawX, -1, rawZ, centerX, centerY);
     w._univProj = proj;
@@ -3272,14 +3369,14 @@ function drawUniverse(ctx, width, height) {
   const activeWordObj = state.byWord[activeWordName?.toLowerCase()];
 
   if (activeWordObj && activeWordObj._univProj) {
-    const [ax, ay, az] = activeWordObj.pca_3d;
+    const [ax, ay, az] = activeWordObj.pca_3d || [0, 0, 0];
     const pActive = activeWordObj._univProj;
 
     const topNeighbors = state.words
       .filter(w => w.word !== activeWordObj.word)
       .map(w => ({
         word: w,
-        dist: Math.hypot(w.pca_3d[0] - ax, w.pca_3d[1] - ay, w.pca_3d[2] - az)
+        dist: Math.hypot((w.pca_3d?.[0] ?? 0) - ax, (w.pca_3d?.[1] ?? 0) - ay, (w.pca_3d?.[2] ?? 0) - az)
       }))
       .sort((a, b) => a.dist - b.dist)
       .slice(0, 3);
@@ -3391,7 +3488,7 @@ function drawUniverse2D(ctx, width, height, filter, search) {
 
   // Draw 2D Points
   state.words.forEach(w => {
-    const [rawX, rawY] = w.pca_2d;
+    const [rawX, rawY] = w.pca_2d || [0, 0];
     const px = ((rawX + 1) / 2) * plotW + pad;
     const py = (1 - (rawY + 1) / 2) * plotH + pad;
     w._univProj = { px, py, depth: 0, scale: 1 };
@@ -3456,6 +3553,10 @@ function populateDropdowns() {
 // ==========================================================================
 
 function startAnimationLoop() {
+  const reqAnim = (typeof window !== "undefined" && window.requestAnimationFrame) 
+    ? window.requestAnimationFrame.bind(window)
+    : (typeof requestAnimationFrame !== "undefined" ? requestAnimationFrame : (cb => setTimeout(cb, 1000 / 60)));
+
   function loop() {
     let needsCMU = false;
     let needsUniverse = false;
@@ -3474,7 +3575,10 @@ function startAnimationLoop() {
       const c = document.getElementById("cmu-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawCMUSpace(c.getContext("2d"), w, h);
       }
     }
 
@@ -3482,14 +3586,17 @@ function startAnimationLoop() {
       const c = document.getElementById("universe-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawUniverse(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawUniverse(c.getContext("2d"), w, h);
       }
     }
 
-    requestAnimationFrame(loop);
+    reqAnim(loop);
   }
 
-  requestAnimationFrame(loop);
+  reqAnim(loop);
 }
 
 // ==========================================================================
@@ -3497,184 +3604,241 @@ function startAnimationLoop() {
 // ==========================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
-  populateDropdowns();
+  try {
+    populateDropdowns();
+  } catch (err) {
+    console.error("Error in populateDropdowns:", err);
+  }
 
   // Module 1: CMU Feature Space Listeners
-  initCMUCanvas();
-  renderCMUWordTable();
+  try {
+    initCMUCanvas();
+    renderCMUWordTable();
 
-  // Axis change listeners (X, Y, Z)
-  ["cmu-axis-x", "cmu-axis-y", "cmu-axis-z"].forEach(axisId => {
-    document.getElementById(axisId)?.addEventListener("change", (e) => {
-      if (axisId === "cmu-axis-x") state.cmuAxisX = e.target.value;
-      if (axisId === "cmu-axis-y") state.cmuAxisY = e.target.value;
-      if (axisId === "cmu-axis-z") state.cmuAxisZ = e.target.value;
+    // Axis change listeners (X, Y, Z)
+    ["cmu-axis-x", "cmu-axis-y", "cmu-axis-z"].forEach(axisId => {
+      document.getElementById(axisId)?.addEventListener("change", (e) => {
+        if (axisId === "cmu-axis-x") state.cmuAxisX = e.target.value;
+        if (axisId === "cmu-axis-y") state.cmuAxisY = e.target.value;
+        if (axisId === "cmu-axis-z") state.cmuAxisZ = e.target.value;
 
-      renderCMUWordTable();
+        renderCMUWordTable();
+        const c = document.getElementById("cmu-canvas");
+        if (c) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = c.getBoundingClientRect();
+          const w = rect.width > 50 ? rect.width : 760;
+          const h = rect.height > 50 ? rect.height : 520;
+          drawCMUSpace(c.getContext("2d"), w, h);
+        }
+      });
+    });
+
+    // Preset buttons
+    document.querySelectorAll(".cmu-preset-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".cmu-preset-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.cmuPreset = btn.dataset.preset;
+        renderCMUWordTable();
+        const c = document.getElementById("cmu-canvas");
+        if (c) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = c.getBoundingClientRect();
+          const w = rect.width > 50 ? rect.width : 760;
+          const h = rect.height > 50 ? rect.height : 520;
+          drawCMUSpace(c.getContext("2d"), w, h);
+        }
+      });
+    });
+
+    // Auto-rotate toggle for Module 1
+    document.getElementById("btn-cmu-autorotate")?.addEventListener("click", (e) => {
+      state.cmuAutoRotate = !state.cmuAutoRotate;
+      e.currentTarget.classList.toggle("active", state.cmuAutoRotate);
+    });
+
+    // Reset view for Module 1
+    document.getElementById("btn-cmu-resetview")?.addEventListener("click", () => {
+      state.cmuRotX = 0.35;
+      state.cmuRotY = 0.55;
+      state.cmuZoom = 1.0;
       const c = document.getElementById("cmu-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawCMUSpace(c.getContext("2d"), w, h);
       }
     });
-  });
 
-  // Preset buttons
-  document.querySelectorAll(".cmu-preset-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".cmu-preset-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.cmuPreset = btn.dataset.preset;
-      renderCMUWordTable();
+    // 3D / 2D toggle for Module 1
+    document.querySelectorAll("[id^='btn-cmu-view-']").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[id^='btn-cmu-view-']").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.cmuViewMode = btn.dataset.mode;
+        const c = document.getElementById("cmu-canvas");
+        if (c) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = c.getBoundingClientRect();
+          const w = rect.width > 50 ? rect.width : 760;
+          const h = rect.height > 50 ? rect.height : 520;
+          drawCMUSpace(c.getContext("2d"), w, h);
+        }
+      });
+    });
+
+    // Analogy buttons for Module 1
+    document.getElementById("btn-cmu-arrow")?.addEventListener("click", () => {
+      state.cmuShowArrow = true;
+      state.cmuShowTranslation = false;
       const c = document.getElementById("cmu-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawCMUSpace(c.getContext("2d"), w, h);
       }
     });
-  });
 
-  // Auto-rotate toggle for Module 1
-  document.getElementById("btn-cmu-autorotate")?.addEventListener("click", (e) => {
-    state.cmuAutoRotate = !state.cmuAutoRotate;
-    e.currentTarget.classList.toggle("active", state.cmuAutoRotate);
-  });
-
-  // Reset view for Module 1
-  document.getElementById("btn-cmu-resetview")?.addEventListener("click", () => {
-    state.cmuRotX = 0.35;
-    state.cmuRotY = 0.55;
-    state.cmuZoom = 1.0;
-    const c = document.getElementById("cmu-canvas");
-    if (c) {
-      const dpr = window.devicePixelRatio || 1;
-      drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
-    }
-  });
-
-  // 3D / 2D toggle for Module 1
-  document.querySelectorAll("[id^='btn-cmu-view-']").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll("[id^='btn-cmu-view-']").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.cmuViewMode = btn.dataset.mode;
+    document.getElementById("btn-cmu-translate")?.addEventListener("click", () => {
+      state.cmuShowArrow = true;
+      state.cmuShowTranslation = true;
       const c = document.getElementById("cmu-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawCMUSpace(c.getContext("2d"), w, h);
       }
     });
-  });
-
-  // Analogy buttons for Module 1
-  document.getElementById("btn-cmu-arrow")?.addEventListener("click", () => {
-    state.cmuShowArrow = true;
-    state.cmuShowTranslation = false;
-    const c = document.getElementById("cmu-canvas");
-    if (c) {
-      const dpr = window.devicePixelRatio || 1;
-      drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
-    }
-  });
-
-  document.getElementById("btn-cmu-translate")?.addEventListener("click", () => {
-    state.cmuShowArrow = true;
-    state.cmuShowTranslation = true;
-    const c = document.getElementById("cmu-canvas");
-    if (c) {
-      const dpr = window.devicePixelRatio || 1;
-      drawCMUSpace(c.getContext("2d"), c.width / dpr, c.height / dpr);
-    }
-  });
+  } catch (err) {
+    console.error("Error initializing Module 1:", err);
+  }
 
   // Module 2: Heatmap Listeners
-  renderHeatmapModule();
-  document.getElementById("heat-word-a-select")?.addEventListener("change", (e) => {
-    state.heatWordA = e.target.value;
+  try {
     renderHeatmapModule();
-  });
-  document.getElementById("heat-word-b-select")?.addEventListener("change", (e) => {
-    state.heatWordB = e.target.value;
-    renderHeatmapModule();
-  });
+    document.getElementById("heat-word-a-select")?.addEventListener("change", (e) => {
+      state.heatWordA = e.target.value;
+      renderHeatmapModule();
+    });
+    document.getElementById("heat-word-b-select")?.addEventListener("change", (e) => {
+      state.heatWordB = e.target.value;
+      renderHeatmapModule();
+    });
+  } catch (err) {
+    console.error("Error initializing Module 2:", err);
+  }
 
   // Module 3: Analogy Listeners
-  solveCurrentAnalogy();
-  document.getElementById("analogy-select-a")?.addEventListener("change", (e) => {
-    state.analogyA = e.target.value;
+  try {
     solveCurrentAnalogy();
-  });
-  document.getElementById("analogy-select-b")?.addEventListener("change", (e) => {
-    state.analogyB = e.target.value;
-    solveCurrentAnalogy();
-  });
-  document.getElementById("analogy-select-c")?.addEventListener("change", (e) => {
-    state.analogyC = e.target.value;
-    solveCurrentAnalogy();
-  });
+    document.getElementById("analogy-select-a")?.addEventListener("change", (e) => {
+      state.analogyA = e.target.value;
+      solveCurrentAnalogy();
+    });
+    document.getElementById("analogy-select-b")?.addEventListener("change", (e) => {
+      state.analogyB = e.target.value;
+      solveCurrentAnalogy();
+    });
+    document.getElementById("analogy-select-c")?.addEventListener("change", (e) => {
+      state.analogyC = e.target.value;
+      solveCurrentAnalogy();
+    });
+  } catch (err) {
+    console.error("Error initializing Module 3:", err);
+  }
 
   // Module 4: Contextual Shift Listener
-  updateContextualShift();
-  document.getElementById("ctx-weight-slider")?.addEventListener("input", (e) => {
-    state.ctxWeight = parseFloat(e.target.value);
+  try {
     updateContextualShift();
-  });
+    document.getElementById("ctx-weight-slider")?.addEventListener("input", (e) => {
+      state.ctxWeight = parseFloat(e.target.value);
+      updateContextualShift();
+    });
+  } catch (err) {
+    console.error("Error initializing Module 4:", err);
+  }
 
   // Module 5: Universe Listeners
-  initUniverseCanvas();
+  try {
+    initUniverseCanvas();
 
-  document.querySelectorAll(".universe-filter-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".universe-filter-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.universeFilter = btn.dataset.category;
+    document.querySelectorAll(".universe-filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".universe-filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.universeFilter = btn.dataset.category;
+        const c = document.getElementById("universe-canvas");
+        if (c) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = c.getBoundingClientRect();
+          const w = rect.width > 50 ? rect.width : 760;
+          const h = rect.height > 50 ? rect.height : 520;
+          drawUniverse(c.getContext("2d"), w, h);
+        }
+      });
+    });
+
+    document.getElementById("universe-search")?.addEventListener("input", (e) => {
+      state.universeSearch = e.target.value;
       const c = document.getElementById("universe-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawUniverse(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawUniverse(c.getContext("2d"), w, h);
       }
     });
-  });
 
-  document.getElementById("universe-search")?.addEventListener("input", (e) => {
-    state.universeSearch = e.target.value;
-    const c = document.getElementById("universe-canvas");
-    if (c) {
-      const dpr = window.devicePixelRatio || 1;
-      drawUniverse(c.getContext("2d"), c.width / dpr, c.height / dpr);
-    }
-  });
+    document.getElementById("btn-universe-autorotate")?.addEventListener("click", (e) => {
+      state.universeAutoRotate = !state.universeAutoRotate;
+      e.currentTarget.classList.toggle("active", state.universeAutoRotate);
+    });
 
-  // Module 5 Toolbar Buttons
-  document.getElementById("btn-universe-autorotate")?.addEventListener("click", (e) => {
-    state.universeAutoRotate = !state.universeAutoRotate;
-    e.currentTarget.classList.toggle("active", state.universeAutoRotate);
-  });
-
-  document.getElementById("btn-universe-resetview")?.addEventListener("click", () => {
-    state.universeRotX = 0.32;
-    state.universeRotY = 0.65;
-    state.universeZoom = 1.0;
-    const c = document.getElementById("universe-canvas");
-    if (c) {
-      const dpr = window.devicePixelRatio || 1;
-      drawUniverse(c.getContext("2d"), c.width / dpr, c.height / dpr);
-    }
-  });
-
-  document.querySelectorAll("[id^='btn-universe-view-']").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll("[id^='btn-universe-view-']").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.universeViewMode = btn.dataset.mode;
+    document.getElementById("btn-universe-resetview")?.addEventListener("click", () => {
+      state.universeRotX = 0.32;
+      state.universeRotY = 0.65;
+      state.universeZoom = 1.0;
       const c = document.getElementById("universe-canvas");
       if (c) {
         const dpr = window.devicePixelRatio || 1;
-        drawUniverse(c.getContext("2d"), c.width / dpr, c.height / dpr);
+        const rect = c.getBoundingClientRect();
+        const w = rect.width > 50 ? rect.width : 760;
+        const h = rect.height > 50 ? rect.height : 520;
+        drawUniverse(c.getContext("2d"), w, h);
       }
     });
-  });
+
+    document.querySelectorAll("[id^='btn-universe-view-']").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[id^='btn-universe-view-']").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.universeViewMode = btn.dataset.mode;
+        const c = document.getElementById("universe-canvas");
+        if (c) {
+          const dpr = window.devicePixelRatio || 1;
+          const rect = c.getBoundingClientRect();
+          const w = rect.width > 50 ? rect.width : 760;
+          const h = rect.height > 50 ? rect.height : 520;
+          drawUniverse(c.getContext("2d"), w, h);
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Error initializing Module 5:", err);
+  }
 
   // Start background auto-rotation animation loop
-  startAnimationLoop();
+  try {
+    startAnimationLoop();
+  } catch (err) {
+    console.error("Error starting animation loop:", err);
+  }
 });
